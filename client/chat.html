@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - MentorConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-auth-compat.js"></script>
+    
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body class="bg-gray-50 font-sans h-screen flex flex-col">
+    <nav class="bg-white border-b border-gray-200">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex items-center flex-shrink-0">
+                        <a href="/" class="text-blue-600 font-bold text-2xl">MentorConnect</a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Dashboard
+                        </a>
+                        <a href="search.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <i class="fas fa-users mr-1"></i>Find People
+                        </a>
+                        <a href="chat.html" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Messages
+                        </a>
+                        <a href="communities.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Community
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    
+                    <div class="mr-4 flex items-center">
+                        <span class="text-sm mr-2">Connection:</span>
+                        <span id="connection-status" class="text-sm"><span class="text-yellow-500">Connecting...</span></span>
+                    </div>
+                    
+                    
+                    <div class="relative mr-3">
+                        <button type="button" id="active-users-toggle" class="p-1 text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <span class="sr-only">View active users</span>
+                            <i class="fas fa-users"></i>
+                            <span id="active-users-badge" class="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+                        </button>
+                        
+                        
+                        <div id="active-users-section" class="hidden origin-top-right absolute right-0 mt-2 bg-white rounded-lg shadow-md p-4 w-64 z-10">
+                            <h3 class="text-lg font-semibold mb-2">Active Users <span id="active-users-count" class="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">0</span></h3>
+                            <div id="active-users-list" class="space-y-3 max-h-80 overflow-y-auto">
+                                <p class="text-gray-500 text-sm">No other users online</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="p-1 text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <span class="sr-only">View notifications</span>
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    
+                    
+                    <div class="ml-3 relative">
+                        <div>
+                            <button type="button" class="flex text-sm bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu-button">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full" src="assets/profile-placeholder.svg" alt="User profile">
+                            </button>
+                        </div>
+                        <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="profile-dropdown" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                            <a href="settings.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-gray-800 hover:bg-gray-100" id="logout-button">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex items-center sm:hidden">
+                    
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" id="mobile-menu-button">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="hidden sm:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="dashboard.html" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
+                <a href="search.html" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Find People</a>
+                <a href="chat.html" class="bg-blue-50 border-blue-500 text-blue-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Messages</a>
+                <a href="communities.html" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Community</a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-4">
+                    <div class="flex-shrink-0">
+                        <img class="h-10 w-10 rounded-full" src="assets/profile-placeholder.svg" alt="User profile">
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium text-gray-800 user-name">Jane Smith</div>
+                        <div class="text-sm font-medium text-gray-500 user-email">jane.smith@example.com</div>
+                    </div>
+                    <button type="button" class="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <span class="sr-only">View notifications</span>
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+                <div class="mt-3 space-y-1">
+                    <a href="profile.html" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Your Profile</a>
+                    <a href="settings.html" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Settings</a>
+                    <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100" id="mobile-logout-button">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 flex overflow-hidden">
+        
+        <div class="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col">
+            <div class="p-4 border-b border-gray-200">
+                <div class="relative">
+                    <input type="text" placeholder="Search conversations..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <div class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Active Conversations
+                </div>
+                
+                
+                <ul class="divide-y divide-gray-200">
+                    
+                    <li class="bg-blue-50">
+                        <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition duration-150 ease-in-out conversation-item" data-conversation-id="user001" onclick="selectConversation(this, 'user001', 'Aditya Agarwal'); return false;">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 relative">
+                                    <img class="h-12 w-12 rounded-full" src="assets/mentor-1.svg" alt="User">
+                                    <span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white bg-green-400"></span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">Aditya Agarwal</p>
+                                        <p class="text-xs text-gray-500">5m</p>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">I can help you prepare for your upcoming interview.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition duration-150 ease-in-out conversation-item" data-conversation-id="user002" onclick="selectConversation(this, 'user002', 'Kishlaya Sinha'); return false;">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 relative">
+                                    <img class="h-12 w-12 rounded-full" src="assets/mentor-2.svg" alt="User">
+                                    <span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white bg-gray-300"></span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">Kishlaya Sinha</p>
+                                        <p class="text-xs text-gray-500">2h</p>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">Let's schedule our next product strategy session.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition duration-150 ease-in-out conversation-item" data-conversation-id="user003" onclick="selectConversation(this, 'user003', 'Priyaka Agrawal'); return false;">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 relative">
+                                    <img class="h-12 w-12 rounded-full" src="assets/mentor-3.svg" alt="User">
+                                    <span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white bg-gray-300"></span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">Priyaka Agrawal</p>
+                                        <p class="text-xs text-gray-500">Yesterday</p>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">Let's review your design portfolio next week.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition duration-150 ease-in-out conversation-item" data-conversation-id="user004" onclick="selectConversation(this, 'user004', 'Vanshika Lakra'); return false;">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 relative">
+                                    <img class="h-12 w-12 rounded-full" src="assets/mentor-2.svg" alt="User">
+                                    <span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white bg-green-400"></span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">Vanshika Lakra</p>
+                                        <p class="text-xs text-gray-500">2d</p>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">I've shared some resources about embedded systems.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition duration-150 ease-in-out conversation-item" data-conversation-id="user005" onclick="selectConversation(this, 'user005', 'Akshat Bhagat'); return false;">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 relative">
+                                    <img class="h-12 w-12 rounded-full" src="assets/mentor-1.svg" alt="User">
+                                    <span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white bg-gray-400"></span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">Akshat Bhagat</p>
+                                        <p class="text-xs text-gray-500">1w</p>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">Here's the AI project we discussed.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition duration-150 ease-in-out conversation-item" data-conversation-id="ai" onclick="selectConversation(this, 'ai', 'AI Assistant'); return false;">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 relative">
+                                    <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fas fa-robot text-blue-600 text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">AI Assistant</p>
+                                        <p class="text-xs text-gray-500">Always available</p>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">Ask me anything about your career goals!</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        
+        <div class="hidden md:flex flex-col flex-1 bg-gray-50 chat-main-content">
+            
+            <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between chat-header">
+                <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0 relative">
+                        <img class="h-10 w-10 rounded-full header-avatar" src="assets/mentor-1.svg" alt="User" id="header-avatar">
+                        <span class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-green-400"></span>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-medium text-gray-900" id="header-name">Aditya Agarwal</h2>
+                        <p class="text-xs text-green-600" id="header-status">Online</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-phone"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </div>
+            </div>
+            
+            
+            <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages">
+                
+                <div class="flex justify-center">
+                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Today, 10:32 AM</span>
+                </div>
+                
+                
+                <div class="flex items-end">
+                    <div class="flex-shrink-0 mr-3">
+                        <img class="h-8 w-8 rounded-full" src="assets/mentor-1.svg" alt="User">
+                    </div>
+                    <div class="bg-white rounded-lg rounded-bl-none shadow-sm px-4 py-2 max-w-xs sm:max-w-md">
+                        <p class="text-sm text-gray-800">Hi! I'm Aditya, your mentor from Infosys. I saw that you have an interview coming up. How can I help you prepare?</p>
+                    </div>
+                </div>
+                
+                
+                <div class="flex items-end justify-end">
+                    <div class="bg-blue-600 text-white rounded-lg rounded-br-none shadow-sm px-4 py-2 max-w-xs sm:max-w-md">
+                        <p class="text-sm">Yes, I have a technical interview for a Full Stack Developer role next week. I'm a bit nervous about the system design portion.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="flex items-end">
+                    <div class="flex-shrink-0 mr-3">
+                        <img class="h-8 w-8 rounded-full" src="assets/mentor-1.svg" alt="User">
+                    </div>
+                    <div class="bg-white rounded-lg rounded-bl-none shadow-sm px-4 py-2 max-w-xs sm:max-w-md">
+                        <p class="text-sm text-gray-800">Don't worry, system design is something I specialize in! Let's schedule a mock interview session where we can go over some common system design questions and I'll guide you through the approach.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="flex items-end justify-end">
+                    <div class="bg-blue-600 text-white rounded-lg rounded-br-none shadow-sm px-4 py-2 max-w-xs sm:max-w-md">
+                        <p class="text-sm">That sounds great, thank you! I'm available tomorrow evening or anytime this weekend.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="flex items-center">
+                    <img class="h-8 w-8 rounded-full mr-3" src="assets/mentor-1.svg" alt="User">
+                    <div class="bg-gray-100 px-4 py-2 rounded-full">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-75"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="bg-white border-t border-gray-200 p-4">
+                <div class="flex items-end space-x-2">
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <div class="flex-1 relative">
+                        <textarea rows="1" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none" placeholder="Type a message..." id="message-input"></textarea>
+                        <button class="absolute right-3 bottom-2.5 text-gray-500 hover:text-blue-600">
+                            <i class="fas fa-smile"></i>
+                        </button>
+                    </div>
+                    <button class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-blue-700" id="send-message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="mt-2 flex items-center text-xs text-gray-500">
+                    <i class="fas fa-shield-alt mr-1"></i>
+                    <span>Messages are scanned by our AI for inappropriate content</span>
+                </div>
+            </div>
+            
+            
+            <div class="hidden flex-1 flex flex-col items-center justify-center p-6 bg-gray-50" id="empty-state">
+                <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-comments text-4xl text-blue-600"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Your messages</h3>
+                <p class="text-gray-500 text-center mb-6 max-w-md">Connect with mentors and start conversations to get guidance on your career journey.</p>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Find Mentors</button>
+            </div>
+        </div>
+        
+        
+        <div class="md:hidden flex-1 flex flex-col items-center justify-center p-6 bg-gray-50">
+            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-comments text-3xl text-blue-600"></i>
+            </div>
+            <h3 class="text-base font-medium text-gray-900 mb-2">Select a conversation</h3>
+            <p class="text-gray-500 text-center text-sm">Choose a conversation from the list to start messaging</p>
+        </div>
+    </main>
+
+    <script src="js/mockUsers.js"></script>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <script src="js/socket-client.js"></script>
+    <script>
+        // Direct function to handle conversation selection
+        function selectConversation(element, userId, userName) {
+            console.log(`Selecting conversation: ${userName} (${userId})`);
+            
+            // Remove active class from all conversations
+            document.querySelectorAll('li').forEach(li => {
+                li.classList.remove('bg-blue-50');
+            });
+            
+            // Add active class to the clicked conversation
+            element.closest('li').classList.add('bg-blue-50');
+            
+            // Update chat header with the mentor name - using IDs for more reliable selection
+            document.getElementById('header-name').textContent = userName;
+            document.getElementById('header-status').textContent = 'Online';
+            
+            // Update avatar in header
+            document.getElementById('header-avatar').src = `assets/mentor-${userId.endsWith('1') || userId.endsWith('5') ? '1' : userId.endsWith('3') ? '3' : '2'}.svg`;
+            document.getElementById('header-avatar').alt = userName;
+            
+            // Show the chat main content on mobile
+            const chatMainContent = document.querySelector('.chat-main-content');
+            if (chatMainContent) {
+                chatMainContent.classList.remove('hidden');
+            }
+            
+            // Hide the empty state on mobile
+            const emptyState = document.querySelector('.md\\:hidden.flex-1');
+            if (emptyState) {
+                emptyState.classList.add('hidden');
+            }
+            
+            // Load mock messages
+            loadMockMessages(userId, userName);
+            
+            console.log(`Selected conversation with ${userName} (${userId})`);
+        }
+        
+        // Function to load mock messages
+        function loadMockMessages(userId, userName) {
+            const messagesContainer = document.getElementById('chat-messages');
+            if (!messagesContainer) return;
+            
+            // Clear existing messages
+            messagesContainer.innerHTML = '';
+            
+            // Create a few mock messages based on the user
+            const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // Add welcome message
+            const welcomeMessage = document.createElement('div');
+            welcomeMessage.className = 'flex items-start mb-4';
+            welcomeMessage.innerHTML = `
+                <div class="flex-shrink-0 mr-3">
+                    <img class="h-10 w-10 rounded-full" src="assets/mentor-${userId.endsWith('1') || userId.endsWith('5') ? '1' : '2'}.svg" alt="${userName}">
+                </div>
+                <div class="bg-white rounded-lg p-3 shadow-sm max-w-md">
+                    <p class="text-gray-800">Hi there! How can I help you today?</p>
+                    <p class="text-xs text-gray-500 mt-1">${currentTime}</p>
+                </div>
+            `;
+            messagesContainer.appendChild(welcomeMessage);
+            
+            // Add a user response message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'flex items-start justify-end mb-4';
+            userMessage.innerHTML = `
+                <div class="bg-blue-100 rounded-lg p-3 shadow-sm max-w-md">
+                    <p class="text-gray-800">Hey ${userName}, thanks for connecting.</p>
+                    <p class="text-xs text-gray-500 mt-1">${currentTime}</p>
+                </div>
+                <div class="flex-shrink-0 ml-3">
+                    <img class="h-10 w-10 rounded-full" src="assets/profile-placeholder.svg" alt="You">
+                </div>
+            `;
+            messagesContainer.appendChild(userMessage);
+            
+            // Add personalized message based on user
+            let personalizedMessage = '';
+            if (userId === 'user001') {
+                personalizedMessage = "I can definitely help you prepare for your upcoming interview. What position are you applying for?";
+            } else if (userId === 'user002') {
+                personalizedMessage = "Great! Let's schedule our next product strategy session. How does next Monday look for you?";
+            } else if (userId === 'user003') {
+                personalizedMessage = "I'd be happy to review your design portfolio. Do you want to focus on any specific areas?";
+            } else if (userId === 'user004') {
+                personalizedMessage = "I've shared those embedded systems resources. Did you get a chance to look at them yet?";
+            } else if (userId === 'user005') {
+                personalizedMessage = "Let's discuss the AI project we talked about. Have you made any progress on it?";
+            } else {
+                personalizedMessage = "How else can I help you with your career goals?";
+            }
+            
+            // Add the personalized message
+            const personalMessage = document.createElement('div');
+            personalMessage.className = 'flex items-start mb-4';
+            personalMessage.innerHTML = `
+                <div class="flex-shrink-0 mr-3">
+                    <img class="h-10 w-10 rounded-full" src="assets/mentor-${userId.endsWith('1') || userId.endsWith('5') ? '1' : '2'}.svg" alt="${userName}">
+                </div>
+                <div class="bg-white rounded-lg p-3 shadow-sm max-w-md">
+                    <p class="text-gray-800">${personalizedMessage}</p>
+                    <p class="text-xs text-gray-500 mt-1">${currentTime}</p>
+                </div>
+            `;
+            messagesContainer.appendChild(personalMessage);
+            
+            // Scroll to bottom of messages
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Function to send a message
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            if (!messageInput || !messagesContainer) return;
+            
+            const messageText = messageInput.value.trim();
+            if (messageText === '') return;
+            
+            const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // List of abusive words to censor
+            const abusiveWords = [
+                'damn', 'hell', 'shit', 'fuck', 'asshole', 'bitch', 
+                'bastard', 'crap', 'idiot', 'stupid', 'dumb', 
+                'loser', 'jerk', 'moron', 'bullshit'
+            ];
+            
+            // Function to censor abusive words
+            function censorMessage(text) {
+                let censoredText = text;
+                
+                // Split into words to check each word
+                const words = text.split(/\s+/);
+                
+                for (let i = 0; i < words.length; i++) {
+                    // Remove punctuation for checking
+                    const wordWithoutPunctuation = words[i].replace(/[^\w\s]/gi, '').toLowerCase();
+                    
+                    if (abusiveWords.includes(wordWithoutPunctuation)) {
+                        // Replace with censored version that's clickable
+                        const originalWord = words[i];
+                        const censoredWord = '*'.repeat(wordWithoutPunctuation.length);
+                        
+                        // Create a clickable censored word with the original as a data attribute
+                        words[i] = `<span class="censored-word" data-original="${originalWord}">${censoredWord}</span>`;
+                    }
+                }
+                
+                return words.join(' ');
+            }
+            
+            // Censor the message text
+            const censoredMessageText = censorMessage(messageText);
+            
+            // Create and add the user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'flex items-start justify-end mb-4';
+            userMessage.innerHTML = `
+                <div class="bg-blue-100 rounded-lg p-3 shadow-sm max-w-md">
+                    <p class="text-gray-800">${censoredMessageText}</p>
+                    <p class="text-xs text-gray-500 mt-1">${currentTime}</p>
+                </div>
+                <div class="flex-shrink-0 ml-3">
+                    <img class="h-10 w-10 rounded-full" src="assets/profile-placeholder.svg" alt="You">
+                </div>
+            `;
+            messagesContainer.appendChild(userMessage);
+            
+            // Clear the input field
+            messageInput.value = '';
+            
+            // Auto-scroll to the bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Optional: Show typing indicator and simulate a response after a delay
+            setTimeout(() => {
+                // Get the currently active conversation information
+                const activeName = document.getElementById('header-name').textContent;
+                
+                // Create and add the response message
+                const responseMessage = document.createElement('div');
+                responseMessage.className = 'flex items-start mb-4';
+                responseMessage.innerHTML = `
+                    <div class="flex-shrink-0 mr-3">
+                        <img class="h-10 w-10 rounded-full" src="${document.getElementById('header-avatar').src}" alt="${activeName}">
+                    </div>
+                    <div class="bg-white rounded-lg p-3 shadow-sm max-w-md">
+                        <p class="text-gray-800">Thanks for your message! I'll get back to you soon.</p>
+                        <p class="text-xs text-gray-500 mt-1">${currentTime}</p>
+                    </div>
+                `;
+                messagesContainer.appendChild(responseMessage);
+                
+                // Auto-scroll to the bottom again
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1000);
+        }
+
+        // Add event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Send message on button click
+            document.getElementById('send-message').addEventListener('click', sendMessage);
+            
+            // Send message when Enter key is pressed in the input field
+            document.getElementById('message-input').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Toggle profile dropdown
+            document.getElementById('user-menu-button').addEventListener('click', function() {
+                document.getElementById('profile-dropdown').classList.toggle('hidden');
+            });
+            
+            // Toggle mobile menu
+            document.getElementById('mobile-menu-button').addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+            
+            // Handle clicks on censored words
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('censored-word')) {
+                    const originalWord = event.target.getAttribute('data-original');
+                    
+                    if (event.target.textContent.includes('*')) {
+                        // Show the original word when clicked
+                        event.target.textContent = originalWord;
+                        // Set a timeout to hide it again after 3 seconds
+                        setTimeout(() => {
+                            event.target.textContent = '*'.repeat(originalWord.length - (originalWord.replace(/[^\w\s]/gi, '').length));
+                        }, 3000);
+                    }
+                }
+            });
+            
+            // Select the first conversation by default
+            const firstConversation = document.querySelector('.conversation-item');
+            if (firstConversation) {
+                const userId = firstConversation.getAttribute('data-conversation-id');
+                const userName = firstConversation.querySelector('p.text-sm.font-medium').textContent;
+                selectConversation(firstConversation, userId, userName);
+            }
+        });
+    </script>
+
+    <style>
+        .chat-messages {
+            height: calc(100vh - 190px);
+        }
+        
+        .censored-word {
+            cursor: pointer;
+            background-color: #fff3cd;
+            padding: 0 2px;
+            border-radius: 3px;
+            position: relative;
+        }
+        
+        .censored-word:hover {
+            background-color: #ffecb5;
+        }
+        
+        .censored-word:after {
+            content: "👁️ Click to view";
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 10px;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            display: none;
+        }
+        
+        .censored-word:hover:after {
+            display: block;
+        }
+    </style>
+</body>
+</html>

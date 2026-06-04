@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Certification Exam - MentorConnect</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="/" class="text-blue-600 text-2xl font-bold">MentorConnect</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-lg font-medium text-gray-900">Web Development Certification Progress</h2>
+                <span class="text-sm text-gray-500" id="question-counter">Question 1 of 10</span>
+            </div>
+            <div class="bg-gray-200 rounded-full h-2.5 mb-2">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" id="progress-bar" style="width: 10%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500">
+                <span>Start</span>
+                <span>Finish</span>
+            </div>
+        </div>
+
+        <!-- Timer -->
+        <div class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 z-50">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-clock text-gray-400"></i>
+                <span id="timer" class="text-lg font-medium text-gray-900">45:00</span>
+            </div>
+        </div>
+
+        <!-- Question Section -->
+        <div id="question-section" class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div id="current-question" class="space-y-6">
+                <!-- Question content will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center">
+            <button id="prev-btn" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" disabled>
+                <i class="fas fa-arrow-left mr-2"></i>
+                Previous
+            </button>
+            <div class="flex space-x-2">
+                <button id="flag-btn" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <i class="fas fa-flag mr-2 text-yellow-500"></i>
+                    Flag for Review
+                </button>
+                <button id="save-btn" class="inline-flex items-center px-3 py-2 border border-blue-600 shadow-sm text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50">
+                    <i class="fas fa-save mr-2"></i>
+                    Save Progress
+                </button>
+            </div>
+            <button id="next-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Next
+                <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+
+        <!-- Question Navigator -->
+        <div class="fixed left-4 top-1/2 transform -translate-y-1/2 bg-white rounded-lg shadow-lg p-4 hidden lg:block">
+            <h3 class="text-sm font-medium text-gray-900 mb-3">Question Navigator</h3>
+            <div class="grid grid-cols-2 gap-2" id="question-navigator">
+                <!-- Question numbers will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Feedback Panel -->
+        <div id="feedback-panel" class="fixed right-4 bottom-4 w-80 bg-white rounded-lg shadow-lg transform transition-transform duration-300 translate-y-full">
+            <div class="p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-sm font-medium text-gray-900">Answer Feedback</h3>
+                    <button class="text-gray-400 hover:text-gray-500" onclick="closeFeedback()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="feedback-content" class="text-sm text-gray-600">
+                    <!-- Feedback content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize the exam when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the exam
+            mentorExam.init();
+            
+            // Add event listener for the submit button
+            document.getElementById('next-btn').addEventListener('click', function() {
+                if (mentorExam.currentQuestion === mentorExam.totalQuestions - 1) {
+                    // This is the last question, submit the exam
+                    if (confirm('Are you sure you want to submit the exam?')) {
+                        mentorExam.submitExam(mentorExam.answers);
+                    }
+                } else {
+                    // Go to next question
+                    mentorExam.nextQuestion();
+                }
+            });
+            
+            // Add event listener for the previous button
+            document.getElementById('prev-btn').addEventListener('click', function() {
+                mentorExam.previousQuestion();
+            });
+            
+            // Add event listener for the flag button
+            document.getElementById('flag-btn').addEventListener('click', function() {
+                mentorExam.toggleFlagQuestion();
+            });
+            
+            // Add event listener for the save button
+            document.getElementById('save-btn').addEventListener('click', function() {
+                mentorExam.saveProgress();
+            });
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+ArrowRight or Cmd+ArrowRight for next question
+                if ((e.ctrlKey || e.metaKey) && e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    mentorExam.nextQuestion();
+                }
+                // Ctrl+ArrowLeft or Cmd+ArrowLeft for previous question
+                else if ((e.ctrlKey || e.metaKey) && e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    mentorExam.previousQuestion();
+                }
+                // Ctrl+S or Cmd+S to save progress
+                else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    mentorExam.saveProgress();
+                }
+                // F key to flag question
+                else if (e.key === 'f' || e.key === 'F') {
+                    e.preventDefault();
+                    mentorExam.toggleFlagQuestion();
+                }
+            });
+        });
+    </script>
+    <script src="js/mentorExam.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentQuestion = 0;
+            let answers = new Array(10).fill('');
+            let flaggedQuestions = new Set();
+            let examStartTime = Date.now();
+
+            // Initialize question navigator
+            const questionNavigator = document.getElementById('question-navigator');
+            for (let i = 0; i < 10; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'w-8 h-8 rounded-full border text-sm font-medium ' + 
+                              (i === 0 ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100');
+                btn.textContent = i + 1;
+                btn.onclick = () => navigateToQuestion(i);
+                questionNavigator.appendChild(btn);
+            }
+
+            function updateProgress() {
+                const progress = ((currentQuestion + 1) * 10);
+                document.getElementById('progress-bar').style.width = `${progress}%`;
+                document.getElementById('question-counter').textContent = `Question ${currentQuestion + 1} of 10`;
+                
+                // Update navigator buttons
+                Array.from(questionNavigator.children).forEach((btn, index) => {
+                    btn.className = 'w-8 h-8 rounded-full border text-sm font-medium ' + 
+                        (index === currentQuestion ? 'bg-blue-600 text-white' : 
+                         answers[index] ? 'bg-green-100 text-green-800' :
+                         flaggedQuestions.has(index) ? 'bg-yellow-100 text-yellow-800' : 
+                         'text-gray-700 hover:bg-gray-100');
+                });
+
+                // Update navigation buttons
+                document.getElementById('prev-btn').disabled = currentQuestion === 0;
+                document.getElementById('next-btn').textContent = currentQuestion === 9 ? 'Submit' : 'Next';
+            }
+
+            function showQuestion(index) {
+                const question = mentorExam.webDevQuestions[index];
+                document.getElementById('current-question').innerHTML = `
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Question ${index + 1}</h3>
+                    <p class="text-gray-700 mb-4">${question.question}</p>
+                    <textarea 
+                        class="w-full h-32 p-3 border rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Type your answer here..."
+                    >${answers[index]}</textarea>
+                `;
+
+                // Auto-save answer on input
+                const textarea = document.querySelector('#current-question textarea');
+                textarea.oninput = () => {
+                    answers[index] = textarea.value;
+                    saveProgress();
+                };
+            }
+
+            function navigateToQuestion(index) {
+                currentQuestion = index;
+                showQuestion(index);
+                updateProgress();
+            }
+
+            async function submitExam() {
+                try {
+                    const score = mentorExam.calculateScore(answers);
+                    
+                    const result = await mentorExam.submitExam(answers);
+                    
+                    // Show success message
+                    showFeedback(`Exam submitted successfully! Your score: ${score}%`, 'success');
+                    
+                    // Clear local storage
+                    localStorage.removeItem('examAnswers');
+                    
+                    // Redirect to dashboard after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 3000);
+                } catch (error) {
+                    showFeedback('Error submitting exam. Please try again.', 'error');
+                    console.error('Exam submission error:', error);
+                }
+            }
+
+            function saveProgress() {
+                localStorage.setItem('examAnswers', JSON.stringify({
+                    answers,
+                    flaggedQuestions: Array.from(flaggedQuestions),
+                    startTime: examStartTime
+                }));
+                
+                showFeedback('Progress saved successfully!', 'success');
+            }
+
+            // Event Listeners
+            document.getElementById('prev-btn').onclick = () => {
+                if (currentQuestion > 0) {
+                    navigateToQuestion(currentQuestion - 1);
+                }
+            };
+
+            document.getElementById('next-btn').onclick = () => {
+                if (currentQuestion === 9) {
+                    // Submit exam
+                    const allAnswered = answers.every(answer => answer.trim());
+                    if (!allAnswered) {
+                        showFeedback('Please answer all questions before submitting.', 'error');
+                        return;
+                    }
+                    
+                    // Confirm submission
+                    if (confirm('Are you sure you want to submit your exam?')) {
+                        submitExam();
+                    }
+                    return;
+                }
+                
+                navigateToQuestion(currentQuestion + 1);
+            };
+
+            document.getElementById('flag-btn').onclick = () => {
+                flaggedQuestions.has(currentQuestion) 
+                    ? flaggedQuestions.delete(currentQuestion) 
+                    : flaggedQuestions.add(currentQuestion);
+                updateProgress();
+            };
+
+            document.getElementById('save-btn').onclick = saveProgress;
+
+            // Load saved progress if exists
+            const savedProgress = localStorage.getItem('examAnswers');
+            if (savedProgress) {
+                const { answers: savedAnswers, flaggedQuestions: savedFlags, startTime } = JSON.parse(savedProgress);
+                answers = savedAnswers;
+                flaggedQuestions = new Set(savedFlags);
+                examStartTime = startTime;
+                showQuestion(currentQuestion);
+                updateProgress();
+            } else {
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+
+            function showFeedback(message, type = 'info') {
+                const panel = document.getElementById('feedback-panel');
+                const content = document.getElementById('feedback-content');
+                
+                content.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-${type === 'success' ? 'check-circle text-green-400' : 
+                                           type === 'error' ? 'times-circle text-red-400' : 
+                                           'info-circle text-blue-400'} mr-2"></i>
+                        </div>
+                        <p>${message}</p>
+                    </div>
+                `;
+                
+                panel.classList.remove('translate-y-full');
+                setTimeout(() => panel.classList.add('translate-y-full'), 3000);
+            }
+
+            // Event Listeners
+            document.getElementById('next-btn').onclick = () => {
+                if (currentQuestion === 9) {
+                    // Submit exam
+                    const allAnswered = answers.every(answer => answer.trim());
+                    if (!allAnswered) {
+                        showFeedback('Please answer all questions before submitting.', 'error');
+                        return;
+                    }
+                    
+                    // Confirm submission
+                    if (confirm('Are you sure you want to submit your exam?')) {
+                        submitExam();
+                    }
+                    return;
+                }
+                    
+                    const results = mentorExam.evaluateExam('current-user-id', answers);
+                    localStorage.removeItem('examAnswers'); // Clear saved progress
+                    
+                    // Show results
+                    document.querySelector('main').innerHTML = `
+                        <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                            <div class="mb-6">
+                                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full ${
+                                    results.passed ? 'bg-green-100' : 'bg-red-100'
+                                } mb-4">
+                                    <i class="fas fa-${results.passed ? 'check' : 'times'} text-2xl ${
+                                        results.passed ? 'text-green-600' : 'text-red-600'
+                                    }"></i>
+                                </div>
+                                <h2 class="text-2xl font-bold ${
+                                    results.passed ? 'text-green-600' : 'text-red-600'
+                                }">${results.passed ? 'Congratulations!' : 'Not Quite There Yet'}</h2>
+                                <p class="text-gray-600 mt-2">You scored ${results.score} out of ${results.totalQuestions}</p>
+                            </div>
+                            <p class="text-gray-700 mb-6">${results.feedback}</p>
+                            <a href="dashboard.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                                Return to Dashboard
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    navigateToQuestion(currentQuestion + 1);
+                }
+            };
+
+            document.getElementById('prev-btn').onclick = () => {
+                navigateToQuestion(currentQuestion - 1);
+            };
+
+            document.getElementById('flag-btn').onclick = () => {
+                if (flaggedQuestions.has(currentQuestion)) {
+                    flaggedQuestions.delete(currentQuestion);
+                    showFeedback('Question unflagged');
+                } else {
+                    flaggedQuestions.add(currentQuestion);
+                    showFeedback('Question flagged for review');
+                }
+                updateProgress();
+            };
+
+            // Load saved progress if exists
+            const savedProgress = localStorage.getItem('examAnswers');
+            if (savedProgress) {
+                const { answers: savedAnswers, flaggedQuestions: savedFlags, startTime } = JSON.parse(savedProgress);
+                answers = savedAnswers;
+                flaggedQuestions = new Set(savedFlags);
+                examStartTime = startTime;
+                showFeedback('Restored your previous progress');
+            }
+
+            // Initialize first question
+            showQuestion(0);
+            updateProgress();
+
+            // Timer
+            const timerElement = document.getElementById('timer');
+            const examDuration = 45 * 60; // 45 minutes in seconds
+            let timeLeft = examDuration;
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 300) { // Last 5 minutes
+                    timerElement.classList.add('text-red-600', 'animate-pulse');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('next-btn').click(); // Auto-submit
+                }
+            }, 1000);
+        });
+
+        function closeFeedback() {
+            document.getElementById('feedback-panel').classList.add('translate-y-full');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>AI Assistant</title>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle fill="#EFF6FF" cx="100" cy="100" r="100"></circle>
+        <g transform="translate(50.000000, 45.000000)">
+            <!-- Robot head -->
+            <rect fill="#3B82F6" x="15" y="0" width="70" height="80" rx="10"></rect>
+            
+            <!-- Robot eyes -->
+            <circle fill="#FFFFFF" cx="35" cy="30" r="10"></circle>
+            <circle fill="#FFFFFF" cx="65" cy="30" r="10"></circle>
+            <circle fill="#2563EB" cx="35" cy="30" r="5"></circle>
+            <circle fill="#2563EB" cx="65" cy="30" r="5"></circle>
+            
+            <!-- Robot mouth -->
+            <rect fill="#FFFFFF" x="30" y="55" width="40" height="10" rx="5"></rect>
+            
+            <!-- Robot antenna -->
+            <rect fill="#3B82F6" x="45" y="-15" width="10" height="15"></rect>
+            <circle fill="#60A5FA" cx="50" cy="-20" r="5"></circle>
+            
+            <!-- Robot ears/sides -->
+            <rect fill="#60A5FA" x="0" y="15" width="15" height="40" rx="5"></rect>
+            <rect fill="#60A5FA" x="85" y="15" width="15" height="40" rx="5"></rect>
+            
+            <!-- Robot body -->
+            <path d="M25,80 L75,80 L85,110 L15,110 L25,80 Z" fill="#3B82F6"></path>
+            
+            <!-- Robot buttons -->
+            <circle fill="#FFFFFF" cx="50" cy="95" r="5"></circle>
+            <circle fill="#FFFFFF" cx="35" cy="95" r="3"></circle>
+            <circle fill="#FFFFFF" cx="65" cy="95" r="3"></circle>
+        </g>
+    </g>
+</svg>

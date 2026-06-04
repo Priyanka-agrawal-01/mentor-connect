@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MentorConnect - Student-Alumni Mentorship Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="assets/profile-placeholder.svg">
+
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <header class="bg-white shadow-sm">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/" class="text-blue-600 font-bold text-2xl">MentorConnect</a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#features" class="text-gray-600 hover:text-blue-600">Features</a>
+                <a href="#how-it-works" class="text-gray-600 hover:text-blue-600">How It Works</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-blue-600">Testimonials</a>
+                <a href="#communities" class="text-gray-600 hover:text-blue-600">Communities</a>
+            </div>
+            <div class="flex space-x-4">
+                <a href="login.html" class="text-blue-600 hover:text-blue-800 px-4 py-2 rounded-md" id="login-button">Log In</a>
+                <a href="login.html?signup=true" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md" id="signup-button">Sign Up</a>
+            </div>
+            <button class="md:hidden text-gray-600" id="mobile-menu-button">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </nav>
+        <div class="hidden px-4 py-3 bg-white border-t md:hidden" id="mobile-menu">
+            <a href="#features" class="block py-2 text-gray-600 hover:text-blue-600">Features</a>
+            <a href="#how-it-works" class="block py-2 text-gray-600 hover:text-blue-600">How It Works</a>
+            <a href="#testimonials" class="block py-2 text-gray-600 hover:text-blue-600">Testimonials</a>
+            <a href="#communities" class="block py-2 text-gray-600 hover:text-blue-600">Communities</a>
+        </div>
+    </header>
+
+    <main>
+       
+        <section class="py-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">Connect with Verified Alumni Mentors Who've Been There</h1>
+                    <p class="text-xl mb-8">MentorConnect uses AI to verify users, match students with alumni mentors, and enable real-time collaboration based on shared interests, skills, and career goals.</p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="login.html" id="quick-start-button" class="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-md font-medium text-center">Get Started</a>
+                        <a href="#how-it-works" class="border border-white text-white hover:bg-white hover:text-blue-600 px-6 py-3 rounded-md font-medium text-center">Learn More</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <img src="assets/hero-image.svg" alt="Mentorship Illustration" class="w-full">
+                </div>
+            </div>
+        </section>
+
+        
+        <section id="features" class="py-20 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-16">Why Choose MentorConnect?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-brain text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">AI-Powered Matching</h3>
+                        <p class="text-gray-600">Our intelligent algorithm connects you with mentors who align with your skills, interests, and career aspirations.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-comments text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Real-time Communication</h3>
+                        <p class="text-gray-600">Connect instantly with mentors through text chat and video calls for a personal mentorship experience.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-shield-alt text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">AI Document Verification</h3>
+                        <p class="text-gray-600">Our advanced AI verifies ID cards and academic documents to ensure all users are legitimate students and alumni.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-users text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Vibrant Communities</h3>
+                        <p class="text-gray-600">Join batch, branch, and interest-based communities to connect with peers and mentors in your field.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-chart-line text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Goal Tracking</h3>
+                        <p class="text-gray-600">Set career goals, track your progress, and receive guidance from mentors to achieve professional milestones.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-robot text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">AI Assistant</h3>
+                        <p class="text-gray-600">Get 24/7 support from our AI assistant that can answer questions, provide resources, and help you prepare for meetings.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section id="how-it-works" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-16">How It Works</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
+                    <div class="flex flex-col items-center max-w-xs text-center">
+                        <div class="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mb-6 text-2xl font-bold">1</div>
+                        <h3 class="text-xl font-semibold mb-3">Create Your Profile</h3>
+                        <p class="text-gray-600">Sign up and build your profile with your skills, interests, and career goals.</p>
+                    </div>
+                    <div class="hidden md:block">
+                        <i class="fas fa-arrow-right text-blue-600 text-2xl"></i>
+                    </div>
+                    <div class="flex flex-col items-center max-w-xs text-center">
+                        <div class="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mb-6 text-2xl font-bold">2</div>
+                        <h3 class="text-xl font-semibold mb-3">Verify Your Identity</h3>
+                        <p class="text-gray-600">Upload your ID card and academic documents for AI verification to ensure a trusted community.</p>
+                    </div>
+                    <div class="hidden md:block">
+                        <i class="fas fa-arrow-right text-blue-600 text-2xl"></i>
+                    </div>
+                    <div class="flex flex-col items-center max-w-xs text-center">
+                        <div class="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mb-6 text-2xl font-bold">3</div>
+                        <h3 class="text-xl font-semibold mb-3">Get Matched</h3>
+                        <p class="text-gray-600">Our AI algorithm will match you with alumni mentors based on your profile data.</p>
+                    </div>
+                    <div class="hidden md:block">
+                        <i class="fas fa-arrow-right text-blue-600 text-2xl"></i>
+                    </div>
+                    <div class="flex flex-col items-center max-w-xs text-center">
+                        <div class="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mb-6 text-2xl font-bold">4</div>
+                        <h3 class="text-xl font-semibold mb-3">Connect & Grow</h3>
+                        <p class="text-gray-600">Join communities, chat in real-time, and track your progress as you work toward your goals.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section id="communities" class="py-20 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-6">Our Community Members</h2>
+                <p class="text-gray-600 text-center mb-12 max-w-3xl mx-auto">Connect with students and alumni from various batches and branches. Our diverse community is growing every day!</p>
+                
+                <div class="flex mb-8 justify-center space-x-4">
+                    <button class="filter-button px-4 py-2 rounded-full bg-blue-600 text-white" data-filter="all">All</button>
+                    <button class="filter-button px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="cse">CSE</button>
+                    <button class="filter-button px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="ece">ECE</button>
+                    <button class="filter-button px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="aiml">CSE</button>
+                    <button class="filter-button px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="it">CSE</button>
+                </div>
+                <div class="flex mb-8 justify-center space-x-4">
+                    <button class="filter-button px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="2020">2023</button>
+                    <button class="filter-button px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="2022">2023</button>
+                    <button class="filter-button px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="2023">2023</button>
+                    <button class="filter-button px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="2024">2024</button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="community-grid">
+                    
+                    <div class="community-member bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-categories="cse 2023">
+                        <div class="relative">
+                            <img src="assets/profile-placeholder.svg" alt="Aditya Agarwal" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-green-400 rounded-full w-3 h-3"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-semibold text-lg mb-1">Piyush Verma</h3>
+                            <p class="text-gray-500 mb-2">CSE 2023 Batch</p>
+                            <p class="text-gray-600 mb-4">Software Developer passionate about AI and backend technologies</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Java</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Python</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Node.js</span>
+                            </div>
+                            <a href="#" class="user-chat-btn text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center" data-user="Aditya">
+                                <i class="fas fa-comment mr-2"></i> Chat with Piyush
+                            </a>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="community-member bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-categories="cse 2022">
+                        <div class="relative">
+                            <img src="assets/profile-placeholder.svg" alt="Kishlaya Sinha" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-gray-400 rounded-full w-3 h-3"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-semibold text-lg mb-1">Saeed</h3>
+                            <p class="text-gray-500 mb-2">CSE 2023 Batch</p>
+                            <p class="text-gray-600 mb-4">Frontend Developer specializing in React and modern web frameworks</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">React</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">JavaScript</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">TypeScript</span>
+                            </div>
+                            <a href="#" class="user-chat-btn text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center" data-user="Kishlaya">
+                                <i class="fas fa-comment mr-2"></i> Chat with Saeed
+                            </a>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="community-member bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-categories="ece 2023">
+                        <div class="relative">
+                            <img src="assets/profile-placeholder.svg" alt="Priyanka Agrawal" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-green-400 rounded-full w-3 h-3"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-semibold text-lg mb-1">Priyanka Agrawal</h3>
+                            <p class="text-gray-500 mb-2">ECE 2023 Batch</p>
+                            <p class="text-gray-600 mb-4">Hardware Engineer with expertise in IoT and embedded systems</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Arduino</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">IoT</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">PCB Design</span>
+                            </div>
+                            <a href="#" class="user-chat-btn text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center" data-user="Priyanka">
+                                <i class="fas fa-comment mr-2"></i> Chat with Priyanka
+                            </a>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="community-member bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-categories="aiml 2024">
+                        <div class="relative">
+                            <img src="assets/profile-placeholder.svg" alt="Vanshika Lakra" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-green-400 rounded-full w-3 h-3"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-semibold text-lg mb-1">Anushka Nandan</h3>
+                            <p class="text-gray-500 mb-2">CSE 2024 Batch</p>
+                            <p class="text-gray-600 mb-4">Software Developer</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">TensorFlow</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">PyTorch</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Computer Vision</span>
+                            </div>
+                            <a href="#" class="user-chat-btn text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center" data-user="Vanshika">
+                                <i class="fas fa-comment mr-2"></i> Chat with Anushka
+                            </a>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="community-member bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-categories="it 2020">
+                        <div class="relative">
+                            <img src="assets/profile-placeholder.svg" alt="Akshat Bhagat" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-gray-400 rounded-full w-3 h-3"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-semibold text-lg mb-1">Akshat Bhagat</h3>
+                            <p class="text-gray-500 mb-2">IT 2020 Batch</p>
+                            <p class="text-gray-600 mb-4">DevOps Engineer with experience in cloud infrastructure and CI/CD</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">AWS</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Docker</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Kubernetes</span>
+                            </div>
+                            <a href="#" class="user-chat-btn text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center" data-user="Akshat">
+                                <i class="fas fa-comment mr-2"></i> Chat with Akshat
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section id="testimonials" class="py-20 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-16">What Our Users Say</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm">
+                        <div class="flex items-center mb-6">
+                            <img src="assets/profile-placeholder.svg" alt="User" class="w-14 h-14 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-semibold"> Sara ali</h4>
+                                <p class="text-gray-500 text-sm">Computer Science Student</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600">"MentorConnect paired me with an amazing industry mentor who helped me navigate the software engineering job market. I landed my dream internship!"</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm">
+                        <div class="flex items-center mb-6">
+                            <img src="assets/profile-placeholder.svg" alt="User" class="w-14 h-14 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-semibold">ananya verma</h4>
+                                <p class="text-gray-500 text-sm">Marketing Graduate</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600">"The goal tracking feature kept me accountable, and the regular check-ins with my mentor helped me improve my portfolio. Highly recommend!"</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm">
+                        <div class="flex items-center mb-6">
+                            <img src="assets/profile-placeholder.svg" alt="User" class="w-14 h-14 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-semibold">shreyas deo</h4>
+                                <p class="text-gray-500 text-sm">Alumni Mentor</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600">"As an alumni mentor, I've been able to give back to my university community while connecting with bright students. The AI matching system is spot-on!"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="py-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl font-bold mb-6">Ready to Connect with Mentors?</h2>
+                <p class="text-xl mb-8 max-w-2xl mx-auto">Join thousands of students who are accelerating their careers through mentorship.</p>
+                <a href="login.html" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-md font-medium inline-block">Get Started Today</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">MentorConnect</h3>
+                    <p class="text-gray-400">Bridging the gap between students and alumni through AI-powered mentorship.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-400 hover:text-white">Features</a></li>
+                        <li><a href="#how-it-works" class="text-gray-400 hover:text-white">How It Works</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-white">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <p class="text-gray-400">contact@mentorconnect.com</p>
+                </div>
+            </div>
+            <div class="mt-10 pt-6 border-t border-gray-700 text-center text-gray-400">
+                <p>&copy; 2025 MentorConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Community filtering functionality
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const communityMembers = document.querySelectorAll('.community-member');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Toggle active class for buttons
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-blue-600', 'text-white');
+                        btn.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    this.classList.remove('bg-gray-200', 'text-gray-700');
+                    this.classList.add('bg-blue-600', 'text-white');
+                    
+                    // Filter community members
+                    communityMembers.forEach(member => {
+                        const categories = member.getAttribute('data-categories');
+                        if (filter === 'all' || categories.includes(filter)) {
+                            member.style.display = 'block';
+                        } else {
+                            member.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Handle chat button clicks - redirect to chat with user
+            const chatButtons = document.querySelectorAll('.user-chat-btn');
+            chatButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetUser = this.getAttribute('data-user');
+                    // Check if user is logged in
+                    const currentUser = localStorage.getItem('currentUser');
+                    if (currentUser) {
+                        window.location.href = `chat.html?with=${targetUser}`;
+                    } else {
+                        // Redirect to login page if not logged in
+                        window.location.href = 'login.html';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

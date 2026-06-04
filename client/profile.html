@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | MentorConnect</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold">MentorConnect</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="dashboard.html" class="hover:text-indigo-200">Dashboard</a>
+                    <a href="communities.html" class="hover:text-indigo-200">Communities</a>
+                    <a href="search.html" class="hover:text-indigo-200">Find People</a>
+                    <a href="chat.html" class="hover:text-indigo-200">Messages</a>
+                    <a href="profile.html" class="hover:text-indigo-200 border-b-2 border-white">Profile</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="ai-assistant.html" class="p-2 bg-white text-indigo-600 rounded-full hover:bg-indigo-100" title="AI Assistant">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                    <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a href="dashboard.html" class="block py-2 hover:text-indigo-200">Dashboard</a>
+                <a href="communities.html" class="block py-2 hover:text-indigo-200">Communities</a>
+                <a href="search.html" class="block py-2 hover:text-indigo-200">Find People</a>
+                <a href="chat.html" class="block py-2 hover:text-indigo-200">Messages</a>
+                <a href="profile.html" class="block py-2 hover:text-indigo-200">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="container mx-auto px-4 py-8">
+        
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+            <div class="relative">
+                <div class="bg-indigo-100 h-40 w-full"></div>
+                <div class="absolute top-24 left-10">
+                    <div class="relative">
+                        <img id="profile-image" src="https://via.placeholder.com/150" alt="Profile Picture" class="w-32 h-32 rounded-full border-4 border-white object-cover">
+                        <div id="online-status" class="absolute bottom-2 right-2 w-4 h-4 bg-green-400 rounded-full border-2 border-white hidden"></div>
+                    </div>
+                </div>
+                <div class="absolute top-4 right-6 flex space-x-2">
+                    <button id="edit-profile-btn" class="px-4 py-2 bg-white text-indigo-600 rounded-lg shadow hover:bg-indigo-50">
+                        <i class="fas fa-edit mr-2"></i> Edit Profile
+                    </button>
+                    <button id="message-user-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 hidden">
+                        <i class="fas fa-paper-plane mr-2"></i> Message
+                    </button>
+                    <button id="request-mentorship-btn" class="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 hidden">
+                        <i class="fas fa-user-plus mr-2"></i> Request Mentorship
+                    </button>
+                </div>
+            </div>
+            <div class="pt-20 pb-6 px-10">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h1 id="user-name" class="text-3xl font-bold"></h1>
+                        <p id="user-title" class="text-gray-600 text-lg mt-1"></p>
+                        <div class="flex items-center mt-2">
+                            <span id="user-batch" class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2"></span>
+                            <span id="user-branch" class="text-sm bg-purple-100 text-purple-800 px-2 py-1 rounded"></span>
+                        </div>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <div id="match-score" class="bg-indigo-100 rounded-lg p-3 text-center hidden">
+                            <span id="match-percentage" class="text-3xl font-bold text-indigo-600"></span>
+                            <p class="text-sm text-indigo-600">Match Score</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <div class="w-full lg:w-2/3">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4">About</h2>
+                    <p id="user-bio" class="text-gray-700 whitespace-pre-line"></p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4">Skills & Expertise</h2>
+                    <div id="user-skills" class="flex flex-wrap gap-2">
+                        
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4">Interests</h2>
+                    <div id="user-interests" class="flex flex-wrap gap-2">
+                        
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Career Goals</h2>
+                    <div id="user-goals" class="flex flex-wrap gap-2">
+                        
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="w-full lg:w-1/3">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4">Contact Information</h2>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-gray-400 w-6"></i>
+                            <span id="user-email" class="ml-2 text-gray-700"></span>
+                        </li>
+                        <li id="user-linkedin-container" class="flex items-center">
+                            <i class="fab fa-linkedin text-gray-400 w-6"></i>
+                            <a id="user-linkedin" href="#" class="ml-2 text-indigo-600 hover:text-indigo-800" target="_blank"></a>
+                        </li>
+                        <li id="user-github-container" class="flex items-center">
+                            <i class="fab fa-github text-gray-400 w-6"></i>
+                            <a id="user-github" href="#" class="ml-2 text-indigo-600 hover:text-indigo-800" target="_blank"></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4">Badges</h2>
+                    <div id="user-badges" class="grid grid-cols-3 gap-2">
+                        
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Communities</h2>
+                    <ul id="user-communities" class="space-y-2">
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="edit-profile-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg w-full max-w-4xl p-6 mx-4 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Edit Profile</h3>
+                <button id="close-edit-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="edit-profile-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-3">Personal Information</h4>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-firstName">First Name *</label>
+                            <input type="text" id="edit-firstName" class="w-full p-2 border rounded" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-lastName">Last Name *</label>
+                            <input type="text" id="edit-lastName" class="w-full p-2 border rounded" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-title">Professional Title</label>
+                            <input type="text" id="edit-title" class="w-full p-2 border rounded" placeholder="e.g. Software Engineer, Student">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-batch">Batch *</label>
+                            <input type="text" id="edit-batch" class="w-full p-2 border rounded" placeholder="e.g. 2023">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-branch">Branch *</label>
+                            <input type="text" id="edit-branch" class="w-full p-2 border rounded" placeholder="e.g. Computer Science">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-bio">Bio</label>
+                            <textarea id="edit-bio" class="w-full p-2 border rounded" rows="4" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-email">Email Address *</label>
+                            <input type="email" id="edit-email" class="w-full p-2 border rounded" placeholder="your.email@example.com" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold mb-3">Skills & Interests</h4>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-skills">Skills (comma separated)</label>
+                            <input type="text" id="edit-skills" class="w-full p-2 border rounded" placeholder="e.g. JavaScript, Python, UI Design">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-interests">Interests (comma separated)</label>
+                            <input type="text" id="edit-interests" class="w-full p-2 border rounded" placeholder="e.g. AI, Web Development, Mobile Apps">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-careerGoals">Career Goals (comma separated)</label>
+                            <input type="text" id="edit-careerGoals" class="w-full p-2 border rounded" placeholder="e.g. Full-stack Developer, Data Scientist">
+                        </div>
+                        
+                        <h4 class="text-lg font-semibold mb-3 mt-6">Social Links</h4>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-linkedin">LinkedIn Profile</label>
+                            <input type="text" id="edit-linkedin" class="w-full p-2 border rounded" placeholder="linkedin.com/in/yourprofile">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="edit-github">GitHub Profile</label>
+                            <input type="text" id="edit-github" class="w-full p-2 border rounded" placeholder="github.com/yourusername">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Mentorship Availability</label>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="edit-availableForMentorship" class="form-checkbox">
+                                <label for="edit-availableForMentorship" class="ml-2">Available as a mentor</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end mt-6">
+                    <button type="button" id="cancel-edit" class="bg-gray-200 text-gray-700 py-2 px-4 rounded mr-2 hover:bg-gray-300">
+                        Cancel
+                    </button>
+                    <button type="submit" id="save-profile" class="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div id="mentorship-request-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg w-full max-w-md p-6 mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Request Mentorship</h3>
+                <button id="close-mentorship-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="mentorship-request-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="mentorship-message">Message</label>
+                    <textarea id="mentorship-message" class="w-full p-2 border rounded" rows="4" placeholder="Explain why you'd like to have this person as your mentor..." required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="mentorship-goals">Your Goals</label>
+                    <textarea id="mentorship-goals" class="w-full p-2 border rounded" rows="3" placeholder="What specific goals are you hoping to achieve with their mentorship?" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="mentorship-duration">Expected Duration</label>
+                    <select id="mentorship-duration" class="w-full p-2 border rounded" required>
+                        <option value="">Select a duration</option>
+                        <option value="1-3 months">1-3 months</option>
+                        <option value="3-6 months">3-6 months</option>
+                        <option value="6-12 months">6-12 months</option>
+                        <option value="Over 1 year">Over 1 year</option>
+                    </select>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button type="button" id="cancel-mentorship" class="bg-gray-200 text-gray-700 py-2 px-4 rounded mr-2 hover:bg-gray-300">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+                        Send Request
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div id="toast" class="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 hidden transition duration-300 transform translate-y-full opacity-0">
+        <div class="flex items-center">
+            <div id="toast-icon" class="text-green-500 mr-3">
+                <i class="fas fa-check-circle text-xl"></i>
+            </div>
+            <div>
+                <p id="toast-message" class="font-medium">Profile updated successfully!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+
+    <script>
+        // Profile data for Aditya
+        const adityaProfile = {
+            id: 'user001',
+            name: 'Priyanka Agrawal',
+            title: 'Senior Software Engineer at Google',
+            profileImage: 'assets/profiles/aditya.jpg',
+            batch: 'Batch of 2023',
+            branch: 'Electronics',
+            bio: `Experienced software engineer with a passion for building scalable applications and mentoring junior developers. Currently working at Google on cloud infrastructure projects.
+
+I specialize in distributed systems, microservices architecture, and DevOps practices. With over 8 years of industry experience, I've worked across various domains including fintech, e-commerce, and cloud computing.
+
+As a mentor, I'm committed to helping others navigate their tech career, improve their coding skills, and prepare for technical interviews at top companies.`,
+            skills: ['Java', 'Python', 'React', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'System Design', 'Microservices', 'MongoDB'],
+            interests: ['Machine Learning', 'Open Source', 'Cloud Computing', 'Technical Writing', 'Hackathons'],
+            goals: ['Build Tech Communities', 'Technical Leadership', 'AI/ML Research'],
+            email: 'priyanka.agrawal@example.com',
+            linkedin: 'linkedin.com/in/priyanka-agrawal',
+            github: 'github.com/priyankaagrawal',
+            badges: [
+                { name: 'Top Mentor', icon: 'fas fa-award' },
+                { name: 'Problem Solver', icon: 'fas fa-puzzle-piece' },
+                { name: 'Active Member', icon: 'fas fa-star' },
+                { name: 'Tech Expert', icon: 'fas fa-laptop-code' },
+                { name: 'Community Builder', icon: 'fas fa-users' }
+            ],
+            communities: [
+                { name: 'ML Engineers', members: 1248 },
+                { name: 'Interview Prep', members: 756 },
+                { name: 'System Design', members: 980 }
+            ],
+            online: true
+        };
+
+        // Load profile as soon as DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load profile data
+            loadProfileData(adityaProfile);
+            
+            // Set up edit button functionality
+            setupEditProfile();
+        });
+        
+        // Function to load user profile data
+        function loadProfileData(profile) {
+            console.log("Loading profile data for:", profile.name);
+            
+            // Set profile image and basic info
+            document.getElementById('profile-image').src = profile.profileImage;
+            document.getElementById('user-name').textContent = profile.name;
+            document.getElementById('user-title').textContent = profile.title;
+            document.getElementById('user-batch').textContent = profile.batch;
+            document.getElementById('user-branch').textContent = profile.branch;
+            
+            // Set online status if online
+            if (profile.online) {
+                document.getElementById('online-status').classList.remove('hidden');
+            }
+            
+            // Set bio and other text sections
+            document.getElementById('user-bio').textContent = profile.bio;
+            
+            // Set email and social links
+            document.getElementById('user-email').textContent = profile.email;
+            
+            // Always show LinkedIn and GitHub sections, with proper links
+            const linkedinLink = document.getElementById('user-linkedin');
+            document.getElementById('user-linkedin-container').classList.remove('hidden');
+            if (profile.linkedin) {
+                linkedinLink.href = profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}`;
+                linkedinLink.textContent = profile.linkedin;
+            } else {
+                linkedinLink.href = "#";
+                linkedinLink.textContent = "Add LinkedIn profile";
+            }
+            
+            const githubLink = document.getElementById('user-github');
+            document.getElementById('user-github-container').classList.remove('hidden');
+            if (profile.github) {
+                githubLink.href = profile.github.startsWith('http') ? profile.github : `https://${profile.github}`;
+                githubLink.textContent = profile.github;
+            } else {
+                githubLink.href = "#";
+                githubLink.textContent = "Add GitHub profile";
+            }
+            
+            // Add skills
+            const skillsContainer = document.getElementById('user-skills');
+            skillsContainer.innerHTML = '';
+            profile.skills.forEach(skill => {
+                const skillBadge = document.createElement('span');
+                skillBadge.className = 'px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm';
+                skillBadge.textContent = skill;
+                skillsContainer.appendChild(skillBadge);
+            });
+            
+            // Add interests
+            const interestsContainer = document.getElementById('user-interests');
+            interestsContainer.innerHTML = '';
+            profile.interests.forEach(interest => {
+                const interestBadge = document.createElement('span');
+                interestBadge.className = 'px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm';
+                interestBadge.textContent = interest;
+                interestsContainer.appendChild(interestBadge);
+            });
+            
+            // Add goals
+            const goalsContainer = document.getElementById('user-goals');
+            goalsContainer.innerHTML = '';
+            profile.goals.forEach(goal => {
+                const goalBadge = document.createElement('span');
+                goalBadge.className = 'px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm';
+                goalBadge.textContent = goal;
+                goalsContainer.appendChild(goalBadge);
+            });
+            
+            // Add badges
+            const badgesContainer = document.getElementById('user-badges');
+            badgesContainer.innerHTML = '';
+            profile.badges.forEach(badge => {
+                const badgeElement = document.createElement('div');
+                badgeElement.className = 'flex flex-col items-center justify-center p-2 bg-gray-50 rounded';
+                badgeElement.innerHTML = `
+                    <i class="${badge.icon} text-2xl text-indigo-600 mb-1"></i>
+                    <span class="text-xs text-gray-700 text-center">${badge.name}</span>
+                `;
+                badgesContainer.appendChild(badgeElement);
+            });
+            
+            // Add communities
+            const communitiesContainer = document.getElementById('user-communities');
+            communitiesContainer.innerHTML = '';
+            profile.communities.forEach(community => {
+                const communityItem = document.createElement('li');
+                communityItem.className = 'border-l-4 border-indigo-500 pl-4';
+                communityItem.innerHTML = `
+                    <a href="community-detail.html" class="text-indigo-600 hover:text-indigo-800 font-medium">${community.name}</a>
+                    <p class="text-sm text-gray-500">${community.members} members</p>
+                `;
+                communitiesContainer.appendChild(communityItem);
+            });
+        }
+
+        // Function to set up edit profile functionality
+        function setupEditProfile() {
+            console.log("Setting up edit profile functionality");
+            
+            const editProfileBtn = document.getElementById('edit-profile-btn');
+            const editProfileModal = document.getElementById('edit-profile-modal');
+            const closeEditModal = document.getElementById('close-edit-modal');
+            const cancelEdit = document.getElementById('cancel-edit');
+            const editProfileForm = document.getElementById('edit-profile-form');
+            
+            // Check if all necessary elements exist
+            if (!editProfileBtn || !editProfileModal || !closeEditModal || !cancelEdit || !editProfileForm) {
+                console.error("Some edit profile elements are missing:", {
+                    editProfileBtn: !!editProfileBtn,
+                    editProfileModal: !!editProfileModal,
+                    closeEditModal: !!closeEditModal,
+                    cancelEdit: !!cancelEdit,
+                    editProfileForm: !!editProfileForm
+                });
+                return; // Exit if elements are missing
+            }
+            
+            // Populate form with current values
+            populateEditForm();
+            
+            // Open edit modal
+            editProfileBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log("Edit button clicked");
+                editProfileModal.classList.remove('hidden');
+                // Ensure form is populated with latest data
+                populateEditForm();
+            });
+            
+            // Close edit modal
+            function closeModal() {
+                console.log("Closing modal");
+                editProfileModal.classList.add('hidden');
+            }
+            
+            closeEditModal.addEventListener('click', closeModal);
+            cancelEdit.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeModal();
+            });
+            
+            // Handle form submission
+            editProfileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log("Form submitted via form submit event");
+                
+                // Update profile with form values
+                const success = updateProfileFromForm();
+                
+                if (success) {
+                    // Close modal
+                    closeModal();
+                    
+                    // Show success message
+                    alert('Profile updated successfully!');
+                }
+            });
+            
+            // Also add a direct click handler on the save button as a backup
+            document.getElementById('save-profile').addEventListener('click', function(e) {
+                console.log("Save button clicked directly");
+                e.preventDefault(); // Always prevent default to handle it manually
+                
+                // Directly trigger our form processing
+                console.log("Manually handling form submission");
+                
+                // Update profile with form values
+                const success = updateProfileFromForm();
+                
+                if (success) {
+                    // Close modal
+                    closeModal();
+                    
+                    // Show success message
+                    alert('Profile updated successfully!');
+                }
+            });
+        }
+        
+        // Function to populate edit form with current profile values
+        function populateEditForm() {
+            console.log("Populating edit form");
+            
+            // Get form fields
+            const firstNameField = document.getElementById('edit-firstName');
+            const lastNameField = document.getElementById('edit-lastName');
+            const titleField = document.getElementById('edit-title');
+            const batchField = document.getElementById('edit-batch');
+            const branchField = document.getElementById('edit-branch');
+            const bioField = document.getElementById('edit-bio');
+            const emailField = document.getElementById('edit-email');
+            const linkedinField = document.getElementById('edit-linkedin');
+            const githubField = document.getElementById('edit-github');
+            const skillsField = document.getElementById('edit-skills');
+            const interestsField = document.getElementById('edit-interests');
+            const careerGoalsField = document.getElementById('edit-careerGoals');
+            
+            // Split name into first and last name
+            const nameParts = adityaProfile.name.split(' ');
+            
+            // Set values in form
+            if (firstNameField) firstNameField.value = nameParts[0] || '';
+            if (lastNameField) lastNameField.value = nameParts.slice(1).join(' ') || '';
+            if (titleField) titleField.value = adityaProfile.title || '';
+            if (batchField) batchField.value = adityaProfile.batch || '';
+            if (branchField) branchField.value = adityaProfile.branch || '';
+            if (bioField) bioField.value = adityaProfile.bio || '';
+            if (emailField) emailField.value = adityaProfile.email || '';
+            if (linkedinField) linkedinField.value = adityaProfile.linkedin || '';
+            if (githubField) githubField.value = adityaProfile.github || '';
+            if (skillsField) skillsField.value = adityaProfile.skills.join(', ') || '';
+            if (interestsField) interestsField.value = adityaProfile.interests.join(', ') || '';
+            if (careerGoalsField) careerGoalsField.value = adityaProfile.goals.join(', ') || '';
+        }
+        
+        // Function to update profile from form values
+        function updateProfileFromForm() {
+            try {
+                console.log("Updating profile from form");
+                
+                // Helper function to safely get element value
+                function getElementValue(id) {
+                    const element = document.getElementById(id);
+                    if (!element) {
+                        console.warn(`Element with id '${id}' not found`);
+                        return '';
+                    }
+                    return element.value.trim();
+                }
+                
+                // Helper function to check if a form element exists
+                function elementExists(id) {
+                    const exists = !!document.getElementById(id);
+                    if (!exists) {
+                        console.warn(`Element with id '${id}' does not exist`);
+                    }
+                    return exists;
+                }
+                
+                // Check all required form elements
+                const requiredElements = ['edit-firstName', 'edit-lastName', 'edit-title', 'edit-email', 
+                                         'edit-skills', 'edit-interests', 'edit-careerGoals'];
+                                         
+                const allElementsExist = requiredElements.every(elementExists);
+                if (!allElementsExist) {
+                    console.error("Some required form elements are missing");
+                    alert("Cannot save profile: Some form fields are missing. Please try again.");
+                    return false;
+                }
+                
+                // Get form values safely
+                const firstName = getElementValue('edit-firstName');
+                const lastName = getElementValue('edit-lastName');
+                const title = getElementValue('edit-title');
+                const batch = getElementValue('edit-batch');
+                const branch = getElementValue('edit-branch');
+                const bio = getElementValue('edit-bio');
+                const email = getElementValue('edit-email');
+                const linkedin = getElementValue('edit-linkedin');
+                const github = getElementValue('edit-github');
+                
+                // Process comma-separated values safely
+                function processList(id) {
+                    const element = document.getElementById(id);
+                    if (!element) {
+                        console.warn(`Element with id '${id}' not found for list processing`);
+                        return [];
+                    }
+                    
+                    return element.value.split(',')
+                        .map(item => item.trim())
+                        .filter(item => item.length > 0);
+                }
+                
+                const skills = processList('edit-skills');
+                const interests = processList('edit-interests');
+                const goals = processList('edit-careerGoals');
+                
+                console.log("Form data collected successfully:", {
+                    name: `${firstName} ${lastName}`,
+                    title,
+                    email,
+                    skills,
+                    interests,
+                    goals
+                });
+                
+                // Update profile object
+                adityaProfile.name = firstName + (lastName ? ` ${lastName}` : '');
+                adityaProfile.title = title || adityaProfile.title;
+                if (batch) adityaProfile.batch = batch;
+                if (branch) adityaProfile.branch = branch;
+                if (bio) adityaProfile.bio = bio;
+                adityaProfile.email = email;
+                adityaProfile.linkedin = linkedin;
+                adityaProfile.github = github;
+                adityaProfile.skills = skills.length > 0 ? skills : adityaProfile.skills;
+                adityaProfile.interests = interests.length > 0 ? interests : adityaProfile.interests;
+                adityaProfile.goals = goals.length > 0 ? goals : adityaProfile.goals;
+                
+                console.log("Profile updated with social links:", { 
+                    linkedin: adityaProfile.linkedin,
+                    github: adityaProfile.github
+                });
+                
+                // Reload profile data to update UI
+                loadProfileData(adityaProfile);
+                return true;
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                alert("An error occurred while saving the profile: " + error.message);
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

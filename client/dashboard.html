@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MentorConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-auth-compat.js"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <nav class="bg-white border-b border-gray-200">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex items-center flex-shrink-0">
+                        <a href="#" class="text-blue-600 font-bold text-2xl">MentorConnect</a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="dashboard-tab">
+                            Dashboard
+                        </a>
+                        <a href="search.html" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="find-people-tab">
+                            <i class="fas fa-users mr-2"></i>Find People
+                        </a>
+                        <a href="chat.html" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="messages-tab">
+                            Messages
+                        </a>
+                        <a href="communities.html" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="communities-tab">
+                            Community
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    
+                    <div class="relative mr-3">
+                        <button type="button" id="active-users-toggle" class="p-1 text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <span class="sr-only">View active users</span>
+                            <i class="fas fa-users"></i>
+                            <span id="active-users-badge" class="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">1</span>
+                        </button>
+                        
+                        
+                        <div id="active-users-section" class="hidden origin-top-right absolute right-0 mt-2 bg-white rounded-lg shadow-md p-4 w-64 z-10">
+                            <h3 class="text-lg font-semibold mb-2">Active Users <span id="active-users-count" class="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">1</span></h3>
+                            <div id="active-users-list" class="space-y-3 max-h-80 overflow-y-auto">
+                                <p class="text-gray-500 text-sm">No other users online</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="p-1 text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <span class="sr-only">View notifications</span>
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    
+                    
+                    <div class="ml-3 relative">
+                        <div>
+                            <button type="button" class="flex text-sm bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu-button">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full" src="assets/profile-placeholder.svg" alt="User profile">
+                            </button>
+                        </div>
+                        <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="profile-dropdown" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                            <a href="settings.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" id="logout-button">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex items-center sm:hidden">
+                    
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" id="mobile-menu-button">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="hidden sm:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="dashboard.html" class="bg-blue-50 border-blue-500 text-blue-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
+                <a href="search.html" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Find People</a>
+                <a href="chat.html" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Messages</a>
+                <a href="community.html" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Community</a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-4">
+                    <div class="flex-shrink-0">
+                        <img class="h-10 w-10 rounded-full" src="assets/profile-placeholder.svg" alt="User profile">
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium text-gray-800 user-name">Priyanka </div>
+                        <div class="text-sm font-medium text-gray-500 user-email">Priyaka@example.com</div>
+                    </div>
+                    <button type="button" class="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <span class="sr-only">View notifications</span>
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+                <div class="mt-3 space-y-1">
+                    <a href="profile.html" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Your Profile</a>
+                    <a href="settings.html" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Settings</a>
+                    <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100" id="mobile-logout-button">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-7xl">
+        
+        <div class="mb-8 bg-white rounded-lg shadow p-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 user-greeting">Hello, Priyankaa!</h1>
+                    <p class="text-gray-600">Welcome to your MentorConnect dashboard</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="bg-gray-100 rounded-full h-4 w-64 overflow-hidden">
+                        <div class="bg-blue-600 h-4" style="width: 75%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1">Profile completion: <span class="font-semibold">75%</span></p>
+                </div>
+            </div>
+            <div class="border-t pt-4 flex justify-between items-center">
+                <div class="flex items-center text-sm text-blue-600">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <p>Complete your profile to get better mentor matches! <a href="profile.html" class="underline font-medium">Update now</a></p>
+                </div>
+                <button id="find-ai-match-btn" class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center">
+                    <i class="fas fa-robot mr-2"></i>
+                    Find a Perfect Match with AI
+                </button>
+            </div>
+        </div>
+
+        
+        <div class="mb-8 border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8">
+                <button class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="mentors-tab">
+                    Recommended Mentors
+                </button>
+                <button class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="upcoming-tab">
+                    Upcoming Sessions
+                </button>
+                <button class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="badges-tab">
+                    Your Badges
+                </button>
+                <button class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="goals-tab">
+                    Recent Goals
+                </button>
+            </nav>
+        </div>
+
+        
+        <div id="mentors-content" class="tab-content">
+            <h2 class="text-xl font-semibold mb-4">AI-Matched Mentors for You</h2>
+            <p class="text-gray-600 mb-6">Based on your skills, interests, and career goals</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow" data-user-id="user001">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="assets/mentor-1.svg" alt="Mentor" class="w-14 h-14 rounded-full mr-4">
+                            <div>
+                                <h3 class="font-semibold text-lg">Priyanka</h3>
+                                <p class="text-gray-600">Software Engineer at Infosys, CSE 2023</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-yellow-500 mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="ml-2 text-gray-600">4.5 (24 reviews)</span>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="text-sm font-medium mb-2">Skills & Expertise</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Full Stack</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Java</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">React</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">CSE</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Full stack developer with expertise in React and Spring Boot. Passionate about mentoring students in web development and system design.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-green-600 text-sm font-medium">95% Match</span>
+                            <div class="space-x-2">
+                                <button class="px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50">Message</button>
+                                <button class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow" data-user-id="user002">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="assets/mentor-2.svg" alt="Mentor" class="w-14 h-14 rounded-full mr-4">
+                            <div>
+                                <h3 class="font-semibold text-lg">Kishlaya Sinha</h3>
+                                <p class="text-gray-600">Data Scientist at TCS, CSE 2022</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-yellow-500 mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="ml-2 text-gray-600">5.0 (17 reviews)</span>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="text-sm font-medium mb-2">Skills & Expertise</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Machine Learning</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Python</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Data Science</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">CSE</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Specializes in machine learning algorithms and natural language processing. Helping students transition into AI and data science careers.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-green-600 text-sm font-medium">87% Match</span>
+                            <div class="space-x-2">
+                                <button class="px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50">Message</button>
+                                <button class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow" data-user-id="user003">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="assets/mentor-3.svg" alt="Mentor" class="w-14 h-14 rounded-full mr-4">
+                            <div>
+                                <h3 class="font-semibold text-lg">Priyaka Agrawal</h3>
+                                <p class="text-gray-600">UI/UX Designer at Wipro, IT 2022</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-yellow-500 mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span class="ml-2 text-gray-600">4.0 (15 reviews)</span>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="text-sm font-medium mb-2">Skills & Expertise</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">UI/UX</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Figma</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Web Design</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">IT</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Experienced UI/UX designer focused on creating intuitive user experiences. Helps students build impressive design portfolios for job applications.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-green-600 text-sm font-medium">84% Match</span>
+                            <div class="space-x-2">
+                                <button class="px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50">Message</button>
+                                <button class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow" data-user-id="user004">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="assets/mentor-2.svg" alt="Mentor" class="w-14 h-14 rounded-full mr-4">
+                            <div>
+                                <h3 class="font-semibold text-lg">Vanshika Lakra</h3>
+                                <p class="text-gray-600">Systems Engineer at Tech Mahindra, ECE 2023</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-yellow-500 mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="ml-2 text-gray-600">4.5 (12 reviews)</span>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="text-sm font-medium mb-2">Skills & Expertise</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">IoT</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Embedded Systems</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">C++</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">ECE</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Specializes in embedded systems and IoT device development. Guides ECE students in building practical hardware projects and preparing for interviews.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-green-600 text-sm font-medium">82% Match</span>
+                            <div class="space-x-2">
+                                <button class="px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50">Message</button>
+                                <button class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow" data-user-id="user005">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="assets/mentor-1.svg" alt="Mentor" class="w-14 h-14 rounded-full mr-4">
+                            <div>
+                                <h3 class="font-semibold text-lg">Akshat Bhagat</h3>
+                                <p class="text-gray-600">AI Engineer at Cognizant, AIML 2024</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-yellow-500 mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span class="ml-2 text-gray-600">4.0 (8 reviews)</span>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="text-sm font-medium mb-2">Skills & Expertise</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Deep Learning</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Computer Vision</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">TensorFlow</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">AIML</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Recent graduate specializing in AI and computer vision. Mentors students in building deep learning projects and shares industry insights from Cognizant.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-green-600 text-sm font-medium">79% Match</span>
+                            <div class="space-x-2">
+                                <button class="px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50">Message</button>
+                                <button class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button class="text-blue-600 hover:text-blue-800 font-medium flex items-center mx-auto">
+                    <span>View more recommendations</span>
+                    <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+        
+        
+        <div id="upcoming-content" class="tab-content hidden">
+            
+            <h2 class="text-xl font-semibold mb-4">Your Upcoming Sessions</h2>
+            <p class="text-gray-600 mb-6">Stay on track with your mentorship appointments</p>
+            
+            
+            <div class="bg-white rounded-lg shadow p-8 text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                    <i class="fas fa-calendar text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-lg font-medium mb-2">No upcoming sessions yet</h3>
+                <p class="text-gray-600 mb-6">Connect with mentors and schedule your first session to get started!</p>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Browse Mentors</button>
+            </div>
+        </div>
+        
+        
+        <div id="badges-content" class="tab-content hidden">
+            <h2 class="text-xl font-semibold mb-4">Your Achievement Badges</h2>
+            <p class="text-gray-600 mb-6">Showcase your mentorship journey and accomplishments</p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                
+                <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+                    <div class="w-20 h-20 mx-auto mb-3 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-rocket text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">Getting Started</h3>
+                    <p class="text-gray-500 text-xs">Completed your profile</p>
+                </div>
+                
+                
+                <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+                    <div class="w-20 h-20 mx-auto mb-3 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-handshake text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">First Connection</h3>
+                    <p class="text-gray-500 text-xs">Connected with a mentor</p>
+                </div>
+                
+                
+                <div class="bg-white rounded-lg shadow-sm p-4 text-center opacity-50">
+                    <div class="w-20 h-20 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-comment-dots text-2xl text-gray-400"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">Active Chatter</h3>
+                    <p class="text-gray-500 text-xs">Exchange 50 messages</p>
+                </div>
+                
+                
+                <div class="bg-white rounded-lg shadow-sm p-4 text-center opacity-50">
+                    <div class="w-20 h-20 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-video text-2xl text-gray-400"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">Video Star</h3>
+                    <p class="text-gray-500 text-xs">Complete 5 video calls</p>
+                </div>
+                
+                
+                <div class="bg-white rounded-lg shadow-sm p-4 text-center opacity-50">
+                    <div class="w-20 h-20 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-bullseye text-2xl text-gray-400"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">Goal Getter</h3>
+                    <p class="text-gray-500 text-xs">Complete 3 goals</p>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div id="goals-content" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-xl font-semibold">Your Recent Goals</h2>
+                    <p class="text-gray-600">Track progress on your mentorship objectives</p>
+                </div>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    <i class="fas fa-plus mr-2"></i> New Goal
+                </button>
+            </div>
+            
+            
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold text-lg">Improve interview skills</h3>
+                            <p class="text-gray-600 text-sm mb-3">Practice technical interviews with mentors and get feedback</p>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full">In Progress</span>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-sm text-gray-600">Progress</span>
+                            <span class="text-sm font-medium">2/5 completed</span>
+                        </div>
+                        <div class="bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-500">Deadline: May 15, 2025</span>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">View Details</a>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold text-lg">Build portfolio project</h3>
+                            <p class="text-gray-600 text-sm mb-3">Create a machine learning project with guidance from mentor</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-sm text-gray-600">Progress</span>
+                            <span class="text-sm font-medium">4/4 completed</span>
+                        </div>
+                        <div class="bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-green-600 h-2.5 rounded-full w-full"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-500">Completed: March 1, 2025</span>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    
+        
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-900">Become a Mentor</h2>
+                    <p class="text-gray-600">Help others grow while enhancing your own skills</p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-start space-x-6">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Web Development Mentor Certification</h3>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-info-circle text-blue-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-blue-700">
+                                        Take our AI-powered certification exam to become a mentor. Available daily from 7 PM to 9 PM.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                <i class="fas fa-clock mr-2"></i>45 Minutes
+                            </span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                <i class="fas fa-question-circle mr-2"></i>10 Questions
+                            </span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                <i class="fas fa-check-circle mr-2"></i>Need 7/10 to Pass
+                            </span>
+                        </div>
+                        <div id="exam-status" class="mb-4">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <span id="exam-status-text">Checking exam availability...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500 mb-2" id="spots-remaining"></p>
+                            <button id="take-exam-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <i class="fas fa-graduation-cap mr-2"></i>
+                            Take Exam Now
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <button id="demo-test-btn" class="mt-3 w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <i class="fas fa-vial mr-2"></i>
+                            Take Demo Test
+                            <i class="fas fa-external-link-alt ml-2 text-xs"></i>
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Function to check exam availability
+        function checkExamAvailability() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const examOpen = hours >= 19 && hours < 21; // 7 PM to 9 PM
+            
+            const examStatus = document.getElementById('exam-status-text');
+            const takeExamBtn = document.getElementById('take-exam-btn');
+            
+            if (examOpen) {
+                examStatus.innerHTML = '<span class="text-green-600">Exam is now open! You can take the exam.</span>';
+                takeExamBtn.disabled = false;
+                takeExamBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                takeExamBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                
+                // Add click handler to navigate to exam page
+                takeExamBtn.onclick = function() {
+                    // Save the current time when starting the exam
+                    sessionStorage.setItem('examStartTime', new Date().toISOString());
+                    window.location.href = 'mentor-exam.html';
+                };
+            } else {
+                examStatus.innerHTML = '<span class="text-red-600">Exam is currently closed. Available daily from 7 PM to 9 PM.</span>';
+                takeExamBtn.disabled = true;
+                takeExamBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                takeExamBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                
+                // Calculate time until next available slot
+                let hoursUntilOpen = 19 - hours;
+                if (hours >= 21) hoursUntilOpen += 24; // If after 9 PM, next slot is tomorrow
+                
+                examStatus.innerHTML += `<div class="mt-1 text-sm">Next available in about ${hoursUntilOpen} hours.</div>`;
+            }
+        }
+        
+        // Handle demo test button click
+        document.getElementById('demo-test-btn').addEventListener('click', function() {
+            // Set demo mode flag in session storage
+            sessionStorage.setItem('demoMode', 'true');
+            // Set a shorter time limit for demo (5 minutes)
+            sessionStorage.setItem('examStartTime', new Date(Date.now() - (40 * 60 * 1000)).toISOString());
+            // Redirect to exam page
+            window.location.href = 'mentor-exam.html';
+        });
+
+        // Check exam availability when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExamAvailability();
+            
+            // Update spots remaining (simulated)
+            const spotsElement = document.getElementById('spots-remaining');
+            if (spotsElement) {
+                const spots = Math.floor(Math.random() * 10) + 1; // Random number between 1-10
+                spotsElement.textContent = `${spots} spots remaining for today`;
+            }
+        });
+    </script>
+    <script src="js/mockUsers.js"></script>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <script src="js/socket-client.js"></script>
+    <script src="js/mentorExam.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+
+<div id="ai-match-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        
+        <div class="relative bg-white rounded-lg max-w-2xl w-full mx-auto shadow-xl z-10">
+            
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-t-lg px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-medium text-white flex items-center">
+                        <i class="fas fa-robot mr-2"></i> Find Your Perfect Mentor Match with AI
+                    </h3>
+                    <button id="ai-match-close" class="text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            
+            <div class="px-6 py-5">
+                <p class="text-gray-600 mb-4">Our AI will analyze your profile information and preferences to find your ideal mentor match. Customize your preferences below for better results.</p>
+                
+                <form id="ai-match-form">
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Your Skill Level</label>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="inline-flex items-center px-3 py-2 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="skill-level" value="beginner" class="mr-2">
+                                Beginner
+                            </label>
+                            <label class="inline-flex items-center px-3 py-2 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="skill-level" value="intermediate" class="mr-2" checked>
+                                Intermediate
+                            </label>
+                            <label class="inline-flex items-center px-3 py-2 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="skill-level" value="advanced" class="mr-2">
+                                Advanced
+                            </label>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Your Learning Style</label>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="inline-flex items-center px-3 py-2 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="learning-style" value="hands-on" class="mr-2" checked>
+                                Hands-on Projects
+                            </label>
+                            <label class="inline-flex items-center px-3 py-2 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="learning-style" value="theoretical" class="mr-2">
+                                Theoretical Learning
+                            </label>
+                            <label class="inline-flex items-center px-3 py-2 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="learning-style" value="mixed" class="mr-2">
+                                Mixed Approach
+                            </label>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Branch / Interest Priorities</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            
+                            <div>
+                                <label class="block text-gray-600 text-xs mb-1">Branches</label>
+                                <select multiple id="ai-branches" class="w-full p-2 border rounded">
+                                    <option value="CSE">CSE</option>
+                                    <option value="ECE">ECE</option>
+                                    <option value="AIML">AIML</option>
+                                    <option value="IT">IT</option>
+                                    <option value="MECH">MECH</option>
+                                    <option value="CIVIL">CIVIL</option>
+                                </select>
+                                <p class="text-xs text-gray-500 mt-1">Hold Ctrl to select multiple</p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-600 text-xs mb-1">Interests</label>
+                                <select multiple id="ai-interests" class="w-full p-2 border rounded">
+                                    <option value="web">Web Development</option>
+                                    <option value="mobile">Mobile Apps</option>
+                                    <option value="ml">Machine Learning</option>
+                                    <option value="cloud">Cloud Computing</option>
+                                    <option value="data">Data Science</option>
+                                    <option value="design">UI/UX Design</option>
+                                </select>
+                                <p class="text-xs text-gray-500 mt-1">Hold Ctrl to select multiple</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Career Goals</label>
+                        <textarea id="career-goals" rows="2" class="w-full p-2 border rounded resize-none" placeholder="Briefly describe your career goals..."></textarea>
+                    </div>
+                    
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Match Precision</label>
+                        <div class="relative pt-1">
+                            <input type="range" id="match-precision" min="1" max="3" value="2" class="w-full">
+                            <div class="flex justify-between text-xs text-gray-600 px-2">
+                                <span>Diverse matches</span>
+                                <span>Balanced</span>
+                                <span>Exact matches</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            
+            <div class="bg-gray-50 px-6 py-4 rounded-b-lg flex justify-between items-center">
+                <button id="ai-match-reset" class="text-gray-500 hover:text-gray-700 font-medium">Reset Preferences</button>
+                <button id="ai-match-submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-sm flex items-center">
+                    <i class="fas fa-magic mr-2"></i> Generate Perfect Matches
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

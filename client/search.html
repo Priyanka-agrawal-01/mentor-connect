@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find People | MentorConnect</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold">MentorConnect</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="dashboard.html" class="hover:text-indigo-200">Dashboard</a>
+                    <a href="communities.html" class="hover:text-indigo-200">Communities</a>
+                    <a href="search.html" class="hover:text-indigo-200 border-b-2 border-white">Find People</a>
+                    <a href="chat.html" class="hover:text-indigo-200">Messages</a>
+                    <a href="profile.html" class="hover:text-indigo-200">Profile</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="ai-assistant.html" class="p-2 bg-white text-indigo-600 rounded-full hover:bg-indigo-100" title="AI Assistant">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                    <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a href="dashboard.html" class="block py-2 hover:text-indigo-200">Dashboard</a>
+                <a href="communities.html" class="block py-2 hover:text-indigo-200">Communities</a>
+                <a href="search.html" class="block py-2 hover:text-indigo-200">Find People</a>
+                <a href="chat.html" class="block py-2 hover:text-indigo-200">Messages</a>
+                <a href="profile.html" class="block py-2 hover:text-indigo-200">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row">
+            
+            <div class="w-full md:w-1/4 p-4">
+                <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
+                    <h2 class="text-xl font-bold mb-4">Search Filters</h2>
+                    <form id="search-form">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="name-search">Name</label>
+                            <input type="text" id="name-search" class="w-full p-2 border rounded" placeholder="Search by name">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="batch-filter">Batch</label>
+                            <select id="batch-filter" class="w-full p-2 border rounded">
+                                <option value="">Any Batch</option>
+                                <option value="2024">Batch of 2024</option>
+                                <option value="2023">Batch of 2023</option>
+                                <option value="2022">Batch of 2022</option>
+                                <option value="2021">Batch of 2021</option>
+                                <option value="2020">Batch of 2020</option>
+                                <option value="2019">Batch of 2019</option>
+                                <option value="2018">Batch of 2018</option>
+                                <option value="2017">Batch of 2017</option>
+                                <option value="2016">Batch of 2016</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="branch-filter">Branch</label>
+                            <select id="branch-filter" class="w-full p-2 border rounded">
+                                <option value="">Any Branch</option>
+                                <option value="CSE">Computer Science (CSE)</option>
+                                <option value="ECE">Electronics & Communication (ECE)</option>
+                                <option value="AIML">AI & Machine Learning (AIML)</option>
+                                <option value="IT">Information Technology (IT)</option>
+                                <option value="MECH">Mechanical Engineering (MECH)</option>
+                                <option value="CIVIL">Civil Engineering (CIVIL)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2" for="interests-filter">Interests</label>
+                            <select id="interests-filter" class="w-full p-2 border rounded">
+                                <option value="">Any Interest</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Machine Learning">Machine Learning</option>
+                                <option value="Mobile Development">Mobile Development</option>
+                                <option value="UI/UX Design">UI/UX Design</option>
+                                <option value="Cloud Computing">Cloud Computing</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Blockchain">Blockchain</option>
+                                <option value="DevOps">DevOps</option>
+                                <option value="Cybersecurity">Cybersecurity</option>
+                                <option value="Game Development">Game Development</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Role</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="role-filter" value="all" class="form-radio" checked>
+                                    <span class="ml-2">All</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="role-filter" value="mentor" class="form-radio">
+                                    <span class="ml-2">Mentors</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="role-filter" value="mentee" class="form-radio">
+                                    <span class="ml-2">Mentees</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Availability</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="available-filter" class="form-checkbox">
+                                    <span class="ml-2">Available for mentorship</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
+                                Apply Filters
+                            </button>
+                            <button type="reset" class="bg-gray-200 text-gray-700 py-2 px-4 rounded hover:bg-gray-300 transition">
+                                Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            
+            <div class="w-full md:w-3/4 p-4">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                        <h1 class="text-2xl font-bold">Find People</h1>
+                        <div class="mt-4 md:mt-0 w-full md:w-64">
+                            <div class="relative">
+                                <input type="text" id="quick-search" placeholder="Quick search..." class="w-full p-2 pl-10 border rounded">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex justify-between items-center text-sm text-gray-600 mb-6">
+                        <p id="results-count">Showing <span id="results-number">0</span> results</p>
+                        <div class="flex items-center">
+                            <label for="sort-by" class="mr-2">Sort by:</label>
+                            <select id="sort-by" class="p-1 border rounded">
+                                <option value="name">Name (A-Z)</option>
+                                <option value="batch">Batch (Recent first)</option>
+                                <option value="matching">Matching Score</option>
+                                <option value="recent">Recently Active</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    
+                    <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <div class="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                            <div class="relative">
+                                <img src="assets/profile-placeholder.svg" alt="Aditya Agarwal" class="w-full h-48 object-cover">
+                                <span class="absolute top-2 right-2 bg-green-500 w-3 h-3 rounded-full ring-2 ring-white" title="Online"></span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg">Aditya Agarwal</h3>
+                                <p class="text-gray-600 text-sm mb-2">Senior Software Engineer at Google</p>
+                                <p class="text-gray-500 text-sm mb-4">CSE, Batch of 2016</p>
+                                
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Java</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Python</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">React</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-4">
+                                    <a href="profile.html?id=user001" class="text-indigo-600 hover:text-indigo-800">View Profile</a>
+                                    <button onclick="connectWithMentor('user001', 'Aditya Agarwal')" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                            <div class="relative">
+                                <img src="assets/profile-placeholder.svg" alt="Priya Sharma" class="w-full h-48 object-cover">
+                                <span class="absolute top-2 right-2 bg-green-500 w-3 h-3 rounded-full ring-2 ring-white" title="Online"></span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg">Priya Sharma</h3>
+                                <p class="text-gray-600 text-sm mb-2">Frontend Developer at Amazon</p>
+                                <p class="text-gray-500 text-sm mb-4">CSE, Batch of 2018</p>
+                                
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">HTML/CSS</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">JavaScript</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">React</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-4">
+                                    <a href="profile.html?id=user002" class="text-indigo-600 hover:text-indigo-800">View Profile</a>
+                                    <button onclick="connectWithMentor('user002', 'Priya Sharma')" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                            <div class="relative">
+                                <img src="assets/profile-placeholder.svg" alt="Rahul Verma" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg">Rahul Verma</h3>
+                                <p class="text-gray-600 text-sm mb-2">Data Scientist at Microsoft</p>
+                                <p class="text-gray-500 text-sm mb-4">AIML, Batch of 2019</p>
+                                
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Python</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">TensorFlow</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">ML</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-4">
+                                    <a href="profile.html?id=user003" class="text-indigo-600 hover:text-indigo-800">View Profile</a>
+                                    <button onclick="connectWithMentor('user003', 'Rahul Verma')" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                            <div class="relative">
+                                <img src="assets/profile-placeholder.svg" alt="Neha Gupta" class="w-full h-48 object-cover">
+                                <span class="absolute top-2 right-2 bg-green-500 w-3 h-3 rounded-full ring-2 ring-white" title="Online"></span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg">Neha Gupta</h3>
+                                <p class="text-gray-600 text-sm mb-2">UX Designer at Adobe</p>
+                                <p class="text-gray-500 text-sm mb-4">ECE, Batch of 2020</p>
+                                
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">UI/UX</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Figma</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Design</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-4">
+                                    <a href="profile.html?id=user004" class="text-indigo-600 hover:text-indigo-800">View Profile</a>
+                                    <button onclick="connectWithMentor('user004', 'Neha Gupta')" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                            <div class="relative">
+                                <img src="assets/profile-placeholder.svg" alt="Vikas Patel" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg">Vikas Patel</h3>
+                                <p class="text-gray-600 text-sm mb-2">Mechanical Engineer at Tata Motors</p>
+                                <p class="text-gray-500 text-sm mb-4">MECH, Batch of 2017</p>
+                                
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">CAD</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">AutoDesk</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Manufacturing</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-4">
+                                    <a href="profile.html?id=user005" class="text-indigo-600 hover:text-indigo-800">View Profile</a>
+                                    <button onclick="connectWithMentor('user005', 'Vikas Patel')" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                            <div class="relative">
+                                <img src="assets/profile-placeholder.svg" alt="Ananya Mehta" class="w-full h-48 object-cover">
+                                <span class="absolute top-2 right-2 bg-green-500 w-3 h-3 rounded-full ring-2 ring-white" title="Online"></span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg">Ananya Mehta</h3>
+                                <p class="text-gray-600 text-sm mb-2">Civil Engineer at L&T</p>
+                                <p class="text-gray-500 text-sm mb-4">CIVIL, Batch of 2019</p>
+                                
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Structures</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">AutoCAD</span>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Construction</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-4">
+                                    <a href="profile.html?id=user006" class="text-indigo-600 hover:text-indigo-800">View Profile</a>
+                                    <button onclick="connectWithMentor('user006', 'Ananya Mehta')" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center mt-8">
+                        <nav class="inline-flex rounded-md shadow">
+                            <button id="prev-page" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                                Previous
+                            </button>
+                            <div id="pagination-numbers" class="hidden md:flex">
+                                
+                            </div>
+                            <button id="next-page" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                                Next
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <template id="user-card-template">
+        <div class="bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+            <div class="p-4 flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                    <img class="user-image h-16 w-16 rounded-full object-cover" src="assets/profile-placeholder.svg" alt="User profile">
+                    <div class="online-indicator hidden absolute w-3 h-3 bg-green-400 rounded-full border-2 border-white -mt-3 ml-12"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="user-name text-lg font-semibold truncate"></h2>
+                    <p class="user-title text-gray-600 truncate"></p>
+                    <div class="user-badges flex mt-1 space-x-1">
+                        
+                    </div>
+                </div>
+                <div class="match-score hidden">
+                    <div class="text-center">
+                        <span class="match-percentage text-lg font-bold text-indigo-600"></span>
+                        <p class="text-xs text-gray-500">Match</p>
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 py-3 bg-gray-50">
+                <div class="flex flex-wrap gap-1 mb-2">
+                    <span class="user-batch text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"></span>
+                    <span class="user-branch text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded"></span>
+                </div>
+                <div class="user-interests text-sm text-gray-600 truncate">
+                    
+                </div>
+            </div>
+            <div class="px-4 py-3 border-t flex justify-between">
+                <a href="#" class="view-profile-btn text-indigo-600 hover:text-indigo-800">
+                    <i class="fas fa-user mr-1"></i> View Profile
+                </a>
+                <a href="#" class="message-btn text-indigo-600 hover:text-indigo-800">
+                    <i class="fas fa-paper-plane mr-1"></i> Message
+                </a>
+            </div>
+        </div>
+    </template>
+
+    
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-2xl font-bold mb-4">MentorConnect</h2>
+                    <p class="text-gray-400">Connecting students with alumni mentors</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Navigation</h3>
+                        <ul class="space-y-2">
+                            <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                            <li><a href="dashboard.html" class="text-gray-400 hover:text-white">Dashboard</a></li>
+                            <li><a href="communities.html" class="text-gray-400 hover:text-white">Communities</a></li>
+                            <li><a href="search.html" class="text-gray-400 hover:text-white">Find People</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Support</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Legal</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400"> 2025 MentorConnect. All rights reserved.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Mock database of users
+        const users = [
+            {
+                id: 'user001',
+                name: 'Aditya Agarwal',
+                title: 'Senior Software Engineer at Google',
+                profileImage: 'assets/profiles/aditya.jpg',
+                batch: '2016',
+                branch: 'CSE',
+                interests: ['Web Development', 'Machine Learning', 'Mentoring'],
+                skills: ['Java', 'Python', 'React'],
+                isOnline: true,
+                isMentor: true,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user002',
+                name: 'Priya Sharma',
+                title: 'Frontend Developer at Amazon',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2018',
+                branch: 'CSE',
+                interests: ['Web Development', 'UI/UX Design'],
+                skills: ['HTML/CSS', 'JavaScript', 'React'],
+                isOnline: true,
+                isMentor: true,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user003',
+                name: 'Rahul Verma',
+                title: 'Data Scientist at Microsoft',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2019',
+                branch: 'AIML',
+                interests: ['Machine Learning', 'Data Science', 'AI'],
+                skills: ['Python', 'TensorFlow', 'ML'],
+                isOnline: false,
+                isMentor: true,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user004',
+                name: 'Neha Gupta',
+                title: 'UX Designer at Adobe',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2020',
+                branch: 'ECE',
+                interests: ['UI/UX Design', 'Web Development'],
+                skills: ['UI/UX', 'Figma', 'Design'],
+                isOnline: true,
+                isMentor: true,
+                isAvailableForMentorship: false
+            },
+            {
+                id: 'user005',
+                name: 'Vikas Patel',
+                title: 'Mechanical Engineer at Tata Motors',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2017',
+                branch: 'MECH',
+                interests: ['Automotive Design', 'Manufacturing'],
+                skills: ['CAD', 'AutoDesk', 'Manufacturing'],
+                isOnline: false,
+                isMentor: true,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user006',
+                name: 'Ananya Mehta',
+                title: 'Civil Engineer at L&T',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2019',
+                branch: 'CIVIL',
+                interests: ['Structural Design', 'Construction Management'],
+                skills: ['Structures', 'AutoCAD', 'Construction'],
+                isOnline: true,
+                isMentor: true,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user007',
+                name: 'Rohan Patel',
+                title: 'Mobile App Developer',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2021',
+                branch: 'IT',
+                interests: ['Mobile Development', 'UI/UX Design'],
+                skills: ['Flutter', 'React Native', 'iOS'],
+                isOnline: true,
+                isMentor: false,
+                isAvailableForMentorship: false
+            },
+            {
+                id: 'user008',
+                name: 'Sneha Reddy',
+                title: 'Cybersecurity Analyst at Wipro',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2020',
+                branch: 'CSE',
+                interests: ['Cybersecurity', 'Ethical Hacking'],
+                skills: ['Network Security', 'Penetration Testing', 'CISSP'],
+                isOnline: false,
+                isMentor: true,
+                isAvailableForMentorship: true
+            },
+            // New 2023 batch users
+            {
+                id: 'user009',
+                name: 'Arjun Kumar',
+                title: 'Software Developer Intern at Infosys',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2023',
+                branch: 'CSE',
+                interests: ['Web Development', 'Competitive Programming'],
+                skills: ['JavaScript', 'React', 'Node.js'],
+                isOnline: true,
+                isMentor: false,
+                isAvailableForMentorship: false
+            },
+            {
+                id: 'user010',
+                name: 'Meera Patel',
+                title: 'ML Research Assistant',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2023',
+                branch: 'AIML',
+                interests: ['Computer Vision', 'NLP', 'Deep Learning'],
+                skills: ['Python', 'PyTorch', 'TensorFlow'],
+                isOnline: false,
+                isMentor: false,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user011',
+                name: 'Vikram Singh',
+                title: 'IoT Developer at TCS',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2023',
+                branch: 'ECE',
+                interests: ['IoT', 'Embedded Systems', 'Robotics'],
+                skills: ['Arduino', 'Raspberry Pi', 'C++'],
+                isOnline: true,
+                isMentor: false,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user012',
+                name: 'Advait Desai',
+                title: 'Full Stack Developer Intern',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2023',
+                branch: 'CSE',
+                interests: ['MERN Stack', 'DevOps', 'Cloud Architecture'],
+                skills: ['MongoDB', 'Express', 'React', 'Node.js'],
+                isOnline: true,
+                isMentor: false,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user013',
+                name: 'Zara Khan',
+                title: 'Computer Vision Researcher',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2023',
+                branch: 'AIML',
+                interests: ['Computer Vision', 'Robotics', 'Self-driving Cars'],
+                skills: ['OpenCV', 'Python', 'Deep Learning'],
+                isOnline: false,
+                isMentor: false,
+                isAvailableForMentorship: false
+            },
+            // New 2024 batch users
+            {
+                id: 'user014',
+                name: 'Aarav Malhotra',
+                title: 'Computer Science Student',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2024',
+                branch: 'CSE',
+                interests: ['Algorithms', 'Open Source', 'Cloud Computing'],
+                skills: ['Java', 'Python', 'DSA'],
+                isOnline: true,
+                isMentor: false,
+                isAvailableForMentorship: false
+            },
+            {
+                id: 'user015',
+                name: 'Ishita Sharma',
+                title: 'ML Enthusiast',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2024',
+                branch: 'AIML',
+                interests: ['Machine Learning', 'Data Science', 'AI Ethics'],
+                skills: ['Python', 'Data Analysis', 'Scikit-learn'],
+                isOnline: false,
+                isMentor: false,
+                isAvailableForMentorship: true
+            },
+            {
+                id: 'user016',
+                name: 'Karthik Reddy',
+                title: 'Electronics Student',
+                profileImage: 'assets/profile-placeholder.svg',
+                batch: '2024',
+                branch: 'ECE',
+                interests: ['VLSI Design', 'Signal Processing', 'Microcontrollers'],
+                skills: ['VHDL', 'PCB Design', 'MATLAB'],
+                isOnline: true,
+                isMentor: false,
+                isAvailableForMentorship: true
+            }
+        ];
+
+        // Current state of filters and pagination
+        let state = {
+            nameFilter: '',
+            batchFilter: '',
+            branchFilter: '',
+            interestFilter: '',
+            roleFilter: 'all',
+            availableFilter: false,
+            currentPage: 1,
+            itemsPerPage: 6,
+            sortBy: 'name'
+        };
+
+        // DOM elements
+        const nameSearchInput = document.getElementById('name-search');
+        const batchFilterSelect = document.getElementById('batch-filter');
+        const branchFilterSelect = document.getElementById('branch-filter');
+        const interestsFilterSelect = document.getElementById('interests-filter');
+        const searchForm = document.getElementById('search-form');
+        const roleRadios = document.querySelectorAll('input[name="role-filter"]');
+        const availableCheckbox = document.getElementById('available-filter');
+        const searchResults = document.getElementById('search-results');
+        const resultsNumber = document.getElementById('results-number');
+        const sortBySelect = document.getElementById('sort-by');
+        const quickSearchInput = document.getElementById('quick-search');
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const paginationNumbers = document.getElementById('pagination-numbers');
+
+        // Helper to apply filters to users
+        function applyFilters() {
+            return users.filter(user => {
+                // Name filter
+                if (state.nameFilter && !user.name.toLowerCase().includes(state.nameFilter.toLowerCase())) {
+                    return false;
+                }
+                
+                // Batch filter
+                if (state.batchFilter && user.batch !== state.batchFilter) {
+                    return false;
+                }
+                
+                // Branch filter
+                if (state.branchFilter && user.branch !== state.branchFilter) {
+                    return false;
+                }
+                
+                // Interest filter
+                if (state.interestFilter && !user.interests.some(interest => 
+                    interest.toLowerCase().includes(state.interestFilter.toLowerCase()))) {
+                    return false;
+                }
+                
+                // Role filter
+                if (state.roleFilter === 'mentor' && !user.isMentor) {
+                    return false;
+                }
+                if (state.roleFilter === 'mentee' && user.isMentor) {
+                    return false;
+                }
+                
+                // Available for mentorship filter
+                if (state.availableFilter && !user.isAvailableForMentorship) {
+                    return false;
+                }
+                
+                return true;
+            });
+        }
+
+        // Sort filtered users based on the current sort option
+        function sortUsers(users) {
+            return [...users].sort((a, b) => {
+                switch (state.sortBy) {
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'batch':
+                        return b.batch.localeCompare(a.batch); // Recent batches first
+                    case 'matching':
+                        // Placeholder for matching algorithm - for now, sort by name
+                        return a.name.localeCompare(b.name);
+                    case 'recent':
+                        // Placeholder for recent activity - for now, prioritize online users
+                        return b.isOnline - a.isOnline;
+                    default:
+                        return 0;
+                }
+            });
+        }
+
+        // Get paginated users for the current page
+        function getPaginatedUsers(filteredUsers) {
+            const startIndex = (state.currentPage - 1) * state.itemsPerPage;
+            const endIndex = startIndex + state.itemsPerPage;
+            return filteredUsers.slice(startIndex, endIndex);
+        }
+
+        // Render search results
+        function renderSearchResults() {
+            // Apply filters and sort
+            const filteredUsers = applyFilters();
+            const sortedUsers = sortUsers(filteredUsers);
+            const paginatedUsers = getPaginatedUsers(sortedUsers);
+            
+            // Update results count
+            resultsNumber.textContent = filteredUsers.length;
+            
+            // Clear search results
+            searchResults.innerHTML = '';
+            
+            // Render users
+            paginatedUsers.forEach(user => {
+                const userCard = document.createElement('div');
+                userCard.className = 'border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition';
+                
+                const onlineIndicator = user.isOnline 
+                    ? '<span class="absolute top-2 right-2 bg-green-500 w-3 h-3 rounded-full ring-2 ring-white" title="Online"></span>' 
+                    : '';
+                
+                const skillsHtml = user.skills.map(skill => 
+                    `<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">${skill}</span>`
+                ).join('');
+                
+                userCard.innerHTML = `
+                    <div class="relative">
+                        <img src="${user.profileImage}" alt="${user.name}" class="w-full h-48 object-cover">
+                        ${onlineIndicator}
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">${user.name}</h3>
+                        <p class="text-gray-600 text-sm mb-2">${user.title}</p>
+                        <p class="text-gray-500 text-sm mb-4">${user.branch}, Batch of ${user.batch}</p>
+                        
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            ${skillsHtml}
+                        </div>
+                        
+                        <div class="flex justify-between mt-4">
+                            <a href="profile.html?id=${user.id}" class="text-indigo-600 hover:text-indigo-800">View Profile</a>
+                            <button onclick="connectWithMentor('${user.id}', '${user.name}')" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm">Connect</button>
+                        </div>
+                    </div>
+                `;
+                
+                searchResults.appendChild(userCard);
+            });
+            
+            // Update pagination state
+            updatePagination(filteredUsers.length);
+        }
+
+        // Update pagination controls
+        function updatePagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / state.itemsPerPage);
+            
+            // Enable/disable previous and next buttons
+            prevPageBtn.disabled = state.currentPage === 1;
+            prevPageBtn.classList.toggle('opacity-50', state.currentPage === 1);
+            
+            nextPageBtn.disabled = state.currentPage === totalPages || totalPages === 0;
+            nextPageBtn.classList.toggle('opacity-50', state.currentPage === totalPages || totalPages === 0);
+            
+            // Generate page numbers
+            paginationNumbers.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 ${
+                    i === state.currentPage 
+                        ? 'bg-indigo-50 text-indigo-600' 
+                        : 'bg-white text-gray-500 hover:bg-gray-50'
+                }`;
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    state.currentPage = i;
+                    renderSearchResults();
+                });
+                paginationNumbers.appendChild(pageButton);
+            }
+        }
+
+        // Event listeners
+        
+        // Search form submission
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            state.nameFilter = nameSearchInput.value.trim();
+            state.batchFilter = batchFilterSelect.value;
+            state.branchFilter = branchFilterSelect.value;
+            state.interestFilter = interestsFilterSelect.value;
+            
+            roleRadios.forEach(radio => {
+                if (radio.checked) {
+                    state.roleFilter = radio.value;
+                }
+            });
+            
+            state.availableFilter = availableCheckbox.checked;
+            state.currentPage = 1; // Reset to first page
+            
+            renderSearchResults();
+        });
+        
+        // Quick search
+        quickSearchInput.addEventListener('input', function() {
+            state.nameFilter = this.value.trim();
+            state.currentPage = 1;
+            renderSearchResults();
+        });
+        
+        // Sort by change
+        sortBySelect.addEventListener('change', function() {
+            state.sortBy = this.value;
+            renderSearchResults();
+        });
+        
+        // Previous page button
+        prevPageBtn.addEventListener('click', function() {
+            if (state.currentPage > 1) {
+                state.currentPage--;
+                renderSearchResults();
+            }
+        });
+        
+        // Next page button
+        nextPageBtn.addEventListener('click', function() {
+            const filteredUsers = applyFilters();
+            const totalPages = Math.ceil(filteredUsers.length / state.itemsPerPage);
+            
+            if (state.currentPage < totalPages) {
+                state.currentPage++;
+                renderSearchResults();
+            }
+        });
+        
+        // Reset form button
+        document.querySelector('button[type="reset"]').addEventListener('click', function() {
+            // Reset all state filters
+            state.nameFilter = '';
+            state.batchFilter = '';
+            state.branchFilter = '';
+            state.interestFilter = '';
+            state.roleFilter = 'all';
+            state.availableFilter = false;
+            state.currentPage = 1;
+            
+            // Reset DOM elements
+            nameSearchInput.value = '';
+            batchFilterSelect.value = '';
+            branchFilterSelect.value = '';
+            interestsFilterSelect.value = '';
+            document.querySelector('input[name="role-filter"][value="all"]').checked = true;
+            availableCheckbox.checked = false;
+            quickSearchInput.value = '';
+            
+            // Re-render results
+            renderSearchResults();
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Initial render
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSearchResults();
+        });
+        
+        // Connect with mentor functionality
+        function connectWithMentor(userId, userName) {
+            // Check if already connected
+            const connectionStatus = localStorage.getItem(`connection_${userId}`);
+            
+            if (connectionStatus === 'connected') {
+                showToast(`You're already connected with ${userName}!`);
+                return;
+            }
+            
+            if (connectionStatus === 'pending') {
+                showToast(`Connection request to ${userName} is pending.`);
+                return;
+            }
+            
+            // Save connection status to localStorage
+            localStorage.setItem(`connection_${userId}`, 'pending');
+            
+            // Show success message
+            showToast(`Connection request sent to ${userName}!`);
+            
+            // Update button text for this user
+            const buttons = document.querySelectorAll(`button[onclick="connectWithMentor('${userId}', '${userName}')"]`);
+            buttons.forEach(button => {
+                button.textContent = 'Pending';
+                button.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                button.classList.add('bg-gray-400', 'cursor-default');
+                button.disabled = true;
+            });
+            
+            // For demo purposes, automatically create a chat conversation
+            // This would normally happen after the mentor accepts the request
+            setTimeout(() => {
+                // Update connection status
+                localStorage.setItem(`connection_${userId}`, 'connected');
+                
+                // Redirect to chat page with this mentor
+                // For demo, we'll just show a notification that you can now chat
+                showToast(`${userName} accepted your request! You can now chat with them.`, 5000);
+            }, 30000);
+        }
+        
+        // Toast notification function
+        function showToast(message, duration = 3000) {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.getElementById('toast-container');
+            
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.className = 'fixed bottom-4 right-4 z-50 flex flex-col space-y-2';
+                document.body.appendChild(toastContainer);
+            }
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = 'bg-indigo-600 text-white px-4 py-2 rounded shadow-lg transform transition-all duration-300 translate-y-0 opacity-100';
+            toast.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add toast to container
+            toastContainer.appendChild(toast);
+            
+            // Remove toast after duration
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, duration);
+        }
+        
+        // Check initial connection status and update buttons
+        function updateConnectionButtons() {
+            users.forEach(user => {
+                const connectionStatus = localStorage.getItem(`connection_${user.id}`);
+                
+                if (connectionStatus) {
+                    const buttons = document.querySelectorAll(`button[onclick="connectWithMentor('${user.id}', '${user.name}')"]`);
+                    
+                    buttons.forEach(button => {
+                        if (connectionStatus === 'connected') {
+                            button.textContent = 'Connected';
+                            button.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                            button.classList.add('bg-green-600', 'cursor-default');
+                            button.disabled = true;
+                        } else if (connectionStatus === 'pending') {
+                            button.textContent = 'Pending';
+                            button.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                            button.classList.add('bg-gray-400', 'cursor-default');
+                            button.disabled = true;
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Call this after rendering results
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSearchResults();
+            updateConnectionButtons();
+        });
+    </script>
+
+    
+    <style>
+        #toast-container {
+            animation: slide-in 0.3s ease-out forwards;
+        }
+        
+        @keyframes slide-in {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</body>
+</html>

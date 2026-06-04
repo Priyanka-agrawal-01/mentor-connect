@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Mentorship Illustration</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#EFF6FF" offset="0%"></stop>
+            <stop stop-color="#DBEAFE" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="url(#linearGradient-1)" x="0" y="0" width="800" height="600" rx="20"></rect>
+        
+        <!-- Background elements -->
+        <circle fill="#93C5FD" cx="150" cy="450" r="100" opacity="0.3"></circle>
+        <circle fill="#93C5FD" cx="650" cy="150" r="80" opacity="0.3"></circle>
+        <circle fill="#93C5FD" cx="400" cy="300" r="200" opacity="0.1"></circle>
+        
+        <!-- Mentor figure -->
+        <g transform="translate(500, 300)">
+            <circle fill="#3B82F6" cx="0" cy="-70" r="50"></circle>
+            <path d="M-60,180 C-60,120 -40,20 0,20 C40,20 60,120 60,180" stroke="#3B82F6" stroke-width="12" fill="none"></path>
+            <line x1="-40" y1="70" x2="40" y2="70" stroke="#3B82F6" stroke-width="12"></line>
+        </g>
+        
+        <!-- Student figure -->
+        <g transform="translate(300, 330)">
+            <circle fill="#60A5FA" cx="0" cy="-70" r="40"></circle>
+            <path d="M-50,150 C-50,100 -30,0 0,0 C30,0 50,100 50,150" stroke="#60A5FA" stroke-width="10" fill="none"></path>
+            <line x1="-35" y1="50" x2="35" y2="50" stroke="#60A5FA" stroke-width="10"></line>
+        </g>
+        
+        <!-- Connection line between figures -->
+        <path d="M350,260 C400,230 450,230 500,260" stroke="#3B82F6" stroke-width="4" stroke-dasharray="10,8"></path>
+        
+        <!-- Connection points/bubbles -->
+        <g transform="translate(350, 260)">
+            <circle fill="#3B82F6" cx="0" cy="0" r="8"></circle>
+        </g>
+        <g transform="translate(400, 245)">
+            <circle fill="#3B82F6" cx="0" cy="0" r="6"></circle>
+        </g>
+        <g transform="translate(450, 245)">
+            <circle fill="#3B82F6" cx="0" cy="0" r="6"></circle>
+        </g>
+        <g transform="translate(500, 260)">
+            <circle fill="#3B82F6" cx="0" cy="0" r="8"></circle>
+        </g>
+        
+        <!-- Skill icons -->
+        <g transform="translate(200, 200)">
+            <circle fill="#EFF6FF" cx="0" cy="0" r="30" stroke="#3B82F6" stroke-width="3"></circle>
+            <text font-family="Arial" font-size="30" font-weight="bold" fill="#3B82F6" text-anchor="middle" dominant-baseline="middle">JS</text>
+        </g>
+        <g transform="translate(600, 200)">
+            <circle fill="#EFF6FF" cx="0" cy="0" r="30" stroke="#3B82F6" stroke-width="3"></circle>
+            <text font-family="Arial" font-size="30" font-weight="bold" fill="#3B82F6" text-anchor="middle" dominant-baseline="middle">AI</text>
+        </g>
+        <g transform="translate(180, 400)">
+            <circle fill="#EFF6FF" cx="0" cy="0" r="25" stroke="#3B82F6" stroke-width="3"></circle>
+            <text font-family="Arial" font-size="25" font-weight="bold" fill="#3B82F6" text-anchor="middle" dominant-baseline="middle">UX</text>
+        </g>
+        <g transform="translate(620, 400)">
+            <circle fill="#EFF6FF" cx="0" cy="0" r="25" stroke="#3B82F6" stroke-width="3"></circle>
+            <text font-family="Arial" font-size="25" font-weight="bold" fill="#3B82F6" text-anchor="middle" dominant-baseline="middle">ML</text>
+        </g>
+    </g>
+</svg>

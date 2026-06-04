@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Verification | MentorConnect</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold">MentorConnect</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="dashboard.html" class="hover:text-indigo-200">Dashboard</a>
+                    <a href="communities.html" class="hover:text-indigo-200">Communities</a>
+                    <a href="search.html" class="hover:text-indigo-200">Find People</a>
+                    <a href="chat.html" class="hover:text-indigo-200">Messages</a>
+                    <a href="profile.html" class="hover:text-indigo-200">Profile</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="ai-assistant.html" class="p-2 bg-white text-indigo-600 rounded-full hover:bg-indigo-100" title="AI Assistant">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                    <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a href="dashboard.html" class="block py-2 hover:text-indigo-200">Dashboard</a>
+                <a href="communities.html" class="block py-2 hover:text-indigo-200">Communities</a>
+                <a href="search.html" class="block py-2 hover:text-indigo-200">Find People</a>
+                <a href="chat.html" class="block py-2 hover:text-indigo-200">Messages</a>
+                <a href="profile.html" class="block py-2 hover:text-indigo-200">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto">
+            
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Account Verification</h1>
+                <p class="text-gray-600 mt-2">To ensure a safe and trusted community, we need to verify your identity and academic credentials</p>
+            </div>
+
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 class="text-xl font-bold mb-4">Verification Progress</h2>
+                <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+                    <div id="progress-bar" class="bg-green-500 h-4 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-sm text-gray-600">
+                    <span>Not Started</span>
+                    <span>In Progress</span>
+                    <span>Verified</span>
+                </div>
+                <div class="mt-4">
+                    <div id="verification-status" class="text-center py-2 px-4 rounded-full bg-yellow-100 text-yellow-800 inline-block">
+                        Pending Verification
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="space-y-6">
+                
+                <div id="id-card-section" class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold">ID Card Verification</h2>
+                            <div id="id-card-status" class="py-1 px-3 rounded-full bg-gray-100 text-gray-600 text-sm">
+                                Pending
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Upload a clear image of your college/university ID card. Make sure all information is clearly visible.</p>
+                        
+                        <div id="id-card-upload-form" class="mb-4">
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                <div class="mb-4">
+                                    <i class="fas fa-id-card text-gray-400 text-4xl"></i>
+                                </div>
+                                <p class="text-gray-500 mb-2">Drag and drop your ID card image here, or click to browse</p>
+                                <p class="text-gray-400 text-sm mb-4">Supported formats: JPG, PNG, PDF (Max size: 5MB)</p>
+                                <label class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded cursor-pointer">
+                                    <span>Choose File</span>
+                                    <input type="file" id="id-card-file" class="hidden" accept=".jpg,.jpeg,.png,.pdf">
+                                </label>
+                            </div>
+                            <div id="id-card-file-details" class="hidden mt-3">
+                                <div class="bg-gray-100 p-3 rounded-lg flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file-image text-indigo-600 mr-3"></i>
+                                        <span id="id-card-filename">filename.jpg</span>
+                                    </div>
+                                    <button id="id-card-remove-btn" class="text-red-500 hover:text-red-700">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <button id="id-card-upload-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded w-full">
+                                    Upload ID Card
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="id-card-verified" class="hidden">
+                            <div class="bg-green-100 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 mr-3">
+                                        <div class="bg-green-500 rounded-full p-2">
+                                            <i class="fas fa-check text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-green-800">ID Card Verified</h3>
+                                        <p class="text-green-700 text-sm" id="id-card-verified-date">Verified on March 25, 2025</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="id-card-rejected" class="hidden">
+                            <div class="bg-red-100 p-4 rounded-lg mb-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mr-3">
+                                        <div class="bg-red-500 rounded-full p-2">
+                                            <i class="fas fa-times text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-red-800">ID Card Rejected</h3>
+                                        <p class="text-red-700 text-sm" id="id-card-rejection-reason">The uploaded ID card was not clearly visible. Please upload a clearer image.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="retry-id-card-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded w-full">
+                                Upload New ID Card
+                            </button>
+                        </div>
+
+                        <div id="id-card-processing" class="hidden">
+                            <div class="bg-blue-100 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 mr-3">
+                                        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-blue-800">Processing...</h3>
+                                        <p class="text-blue-700 text-sm">Our AI is verifying your ID card. This may take a few moments.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="marksheet-section" class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold">Marksheet Verification</h2>
+                            <div id="marksheet-status" class="py-1 px-3 rounded-full bg-gray-100 text-gray-600 text-sm">
+                                Pending
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Upload a clear image of your latest academic marksheet/transcript. This helps us verify your batch and branch.</p>
+                        
+                        <div id="marksheet-upload-form" class="mb-4">
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                <div class="mb-4">
+                                    <i class="fas fa-file-alt text-gray-400 text-4xl"></i>
+                                </div>
+                                <p class="text-gray-500 mb-2">Drag and drop your marksheet image here, or click to browse</p>
+                                <p class="text-gray-400 text-sm mb-4">Supported formats: JPG, PNG, PDF (Max size: 5MB)</p>
+                                <label class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded cursor-pointer">
+                                    <span>Choose File</span>
+                                    <input type="file" id="marksheet-file" class="hidden" accept=".jpg,.jpeg,.png,.pdf">
+                                </label>
+                            </div>
+                            <div id="marksheet-file-details" class="hidden mt-3">
+                                <div class="bg-gray-100 p-3 rounded-lg flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file-image text-indigo-600 mr-3"></i>
+                                        <span id="marksheet-filename">filename.jpg</span>
+                                    </div>
+                                    <button id="marksheet-remove-btn" class="text-red-500 hover:text-red-700">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <button id="marksheet-upload-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded w-full">
+                                    Upload Marksheet
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="marksheet-verified" class="hidden">
+                            <div class="bg-green-100 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 mr-3">
+                                        <div class="bg-green-500 rounded-full p-2">
+                                            <i class="fas fa-check text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-green-800">Marksheet Verified</h3>
+                                        <p class="text-green-700 text-sm" id="marksheet-verified-date">Verified on March 25, 2025</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="marksheet-rejected" class="hidden">
+                            <div class="bg-red-100 p-4 rounded-lg mb-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mr-3">
+                                        <div class="bg-red-500 rounded-full p-2">
+                                            <i class="fas fa-times text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-red-800">Marksheet Rejected</h3>
+                                        <p class="text-red-700 text-sm" id="marksheet-rejection-reason">The uploaded marksheet could not be verified. Please upload a clearer image.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="retry-marksheet-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded w-full">
+                                Upload New Marksheet
+                            </button>
+                        </div>
+
+                        <div id="marksheet-processing" class="hidden">
+                            <div class="bg-blue-100 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 mr-3">
+                                        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-blue-800">Processing...</h3>
+                                        <p class="text-blue-700 text-sm">Our AI is verifying your marksheet. This may take a few moments.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="all-verified-section" class="bg-green-100 rounded-lg shadow-md p-6 hidden">
+                    <div class="text-center">
+                        <div class="inline-block bg-green-500 rounded-full p-3 mb-4">
+                            <i class="fas fa-check text-white text-2xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-green-800 mb-2">Verification Complete!</h2>
+                        <p class="text-green-700 mb-4">All your documents have been verified successfully. You now have full access to MentorConnect.</p>
+                        <a href="dashboard.html" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded">
+                            Go to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="bg-indigo-50 rounded-lg p-6 mt-8">
+                <h3 class="font-bold text-indigo-800 mb-2">Why verification is important:</h3>
+                <ul class="space-y-2 text-indigo-700">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-indigo-600 mt-1 mr-2"></i>
+                        <span>Ensures a safe and trusted community of real students and alumni</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-indigo-600 mt-1 mr-2"></i>
+                        <span>Helps us match you with relevant mentors from your batch and branch</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-indigo-600 mt-1 mr-2"></i>
+                        <span>Prevents fraudulent accounts and maintains platform integrity</span>
+                    </li>
+                </ul>
+                <p class="mt-4 text-sm text-indigo-600">Your documents are processed securely by our AI system and are not shared with other users.</p>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="toast" class="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 hidden transition duration-300 transform translate-y-full opacity-0">
+        <div class="flex items-center">
+            <div id="toast-icon" class="text-green-500 mr-3">
+                <i class="fas fa-check-circle text-xl"></i>
+            </div>
+            <div>
+                <p id="toast-message" class="font-medium">Document uploaded successfully!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/verification.js"></script>
+</body>
+</html>

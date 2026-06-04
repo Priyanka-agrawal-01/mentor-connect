@@ -1,0 +1,29 @@
+{
+  "name": "mentor-connect-client",
+  "version": "1.0.0",
+  "description": "MentorConnect Client Application",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=3000 --ignore=node_modules,**/node_modules/**,live-server*.log",
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "sass --style=compressed src/scss:dist/css",
+    "build:js": "babel src/js -d dist/js"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.1",
+    "jquery": "^3.7.1",
+    "mongoose": "^9.6.3",
+    "socket.io-client": "^4.7.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "autoprefixer": "^10.4.21",
+    "babel-cli": "^6.26.0",
+    "live-server": "^1.2.2",
+    "postcss": "^8.5.3",
+    "sass": "^1.69.5",
+    "tailwindcss": "^4.0.16"
+  }
+}
